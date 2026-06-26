@@ -1279,16 +1279,16 @@ const analytics = getAnalytics(app);
     }
 
     function saveData() {
-    db.collection("mahacap_data").doc(MY_DOCUMENT_ID).set({
-        savedOptions: optionList,
-        lastModified: new Date().toLocaleString()
-    })
-    .then(() => {
-        console.log("डेटा क्लाउडवर सुरक्षितपणे सेव्ह झाला!");
-    })
-    .catch((error) => {
-        console.error("डेटा सेव्ह करताना एरर आला: ", error);
-    });
+        db.collection("mahacap_data").doc(MY_DOCUMENT_ID).set({
+            savedOptions: optionList,
+            lastModified: new Date().toLocaleString()
+        })
+        .then(() => {
+            console.log("डेटा क्लाउडवर सुरक्षितपणे सेव्ह झाला!");
+        })
+        .catch((error) => {
+            console.error("डेटा सेव्ह करताना एरर आला: ", error);
+        });
     }
 
     function createOptionObject() {

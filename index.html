@@ -1091,6 +1091,30 @@
         });
     });
 
+
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBTR3h8-SJo_IaM6CYao2kClAdP7YnBVZM",
+  authDomain: "mahacap.firebaseapp.com",
+  projectId: "mahacap",
+  storageBucket: "mahacap.firebasestorage.app",
+  messagingSenderId: "182834653431",
+  appId: "1:182834653431:web:baa228a8e555161cd48bf2",
+  measurementId: "G-JL81XFHDD2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+    
     // Application Global Scope State
     let optionList = JSON.parse(localStorage.getItem('mhtcetOptionList')) || [];
     let editIndex = -1;
@@ -1250,7 +1274,16 @@
     }
 
     function saveData() {
-        localStorage.setItem('mhtcetOptionList', JSON.stringify(optionList));
+    db.collection("mahacap_data").doc(MY_DOCUMENT_ID).set({
+        savedOptions: optionList,
+        lastModified: new Date().toLocaleString()
+    })
+    .then(() => {
+        console.log("डेटा क्लाउडवर सुरक्षितपणे सेव्ह झाला!");
+    })
+    .catch((error) => {
+        console.error("डेटा सेव्ह करताना एरर आला: ", error);
+    });
     }
 
     function createOptionObject() {
@@ -1671,12 +1704,42 @@
     document.getElementById('downloadPdfBtn').addEventListener('click', downloadFullPDF);
     document.getElementById('exportCsvBtn').addEventListener('click', exportCSV);
 
-    // Baseline Execution Flow
-    showView('dashboard');
-    showStep(1);
-    updateDashboard();
-    renderSummary();
-</script>
+// १. क्लाउडवरून डेटा लोड करणारे फंक्शन
+function loadCloudData() {
+    // फायरबेस कडून डेटा मागवणे
+    db.collection("mahacap_data").doc(MY_DOCUMENT_ID).get()
+    .then((doc) => {
+        if (doc.exists) {
+            // जर क्लाउडवर जुना डेटा मिळाला, तर तो लिस्टमध्ये लोड करा
+            optionList = doc.data().savedOptions || [];
+            console.log("क्लाउडवरून डेटा यशस्वीरित्या लोड झाला आहे.");
+        } else {
+            console.log("क्लाउडवर कोणताही डेटा नाही, नवीन सुरुवात करत आहोत.");
+            optionList = [];
+        }
+        // डेटा मिळाल्यानंतर स्क्रीनवरील डॅशबोर्ड आणि टेबल अपडेट करा
+        updateDashboard();
+        renderSummary();
+    })
+    .catch((error) => {
+        console.error("डेटा लोड करताना एरर आला: ", error);
+        optionList = [];
+        updateDashboard();
+        renderSummary();
+    });
+}
 
+// २. वेबसाईट सुरू होताच काय करायचे (Execution Flow)
+showView('dashboard');
+showStep(1);
+
+// जशी वेबसाईट लोड होईल, तसे लगेच क्लाउडवरून डेटा आणण्यासाठी हे फंक्शन कॉल करा
+loadCloudData();
+
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
 </body>
 </html>

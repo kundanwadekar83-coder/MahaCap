@@ -1,0 +1,3339 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MahaCap - CAP Practice Portal</title>
+        <link rel="icon" type="image/png" href="favicon.png">
+        <style>
+            :root {
+                --navy: #0f172a;
+                --navy-light: #1e293b;
+                --gold: #f59e0b;
+                --gold-dark: #b45309;
+                --bg: #f8fafc;
+                --card: #ffffff;
+                --border: #cbd5e1;
+                --text: #1e293b;
+                --muted: #64748b;
+                --radius: 18px;
+                --shadow: 0 10px 30px rgba(15, 23, 42, .12);
+                --header-grad-1: #1e293b;
+                --header-grad-2: #0f172a;
+                --auth-grad-1: #0f172a;
+                --auth-grad-2: #b45309;
+            }
+
+            /* ---------- Gradient Themes ---------- */
+            html[data-theme="royal"] {
+                --navy: #1e1b4b; --navy-light: #312e81; --gold: #8b5cf6; --gold-dark: #6d28d9;
+                --header-grad-1: #312e81; --header-grad-2: #1e1b4b;
+                --auth-grad-1: #1e1b4b; --auth-grad-2: #7c3aed;
+            }
+            html[data-theme="sunset"] {
+                --navy: #7c2d12; --navy-light: #9a3412; --gold: #f97316; --gold-dark: #c2410c;
+                --header-grad-1: #9a3412; --header-grad-2: #7c2d12;
+                --auth-grad-1: #7c2d12; --auth-grad-2: #f97316;
+            }
+            html[data-theme="ocean"] {
+                --navy: #0c4a6e; --navy-light: #075985; --gold: #06b6d4; --gold-dark: #0891b2;
+                --header-grad-1: #075985; --header-grad-2: #0c4a6e;
+                --auth-grad-1: #0c4a6e; --auth-grad-2: #06b6d4;
+            }
+            html[data-theme="emerald"] {
+                --navy: #064e3b; --navy-light: #065f46; --gold: #10b981; --gold-dark: #047857;
+                --header-grad-1: #065f46; --header-grad-2: #064e3b;
+                --auth-grad-1: #064e3b; --auth-grad-2: #10b981;
+            }
+            html[data-theme="rose"] {
+                --navy: #881337; --navy-light: #9f1239; --gold: #f43f5e; --gold-dark: #be123c;
+                --header-grad-1: #9f1239; --header-grad-2: #881337;
+                --auth-grad-1: #881337; --auth-grad-2: #f43f5e;
+            }
+            html[data-theme="midnight"] {
+                --navy: #030712; --navy-light: #111827; --gold: #38bdf8; --gold-dark: #0284c7;
+                --header-grad-1: #111827; --header-grad-2: #030712;
+                --auth-grad-1: #030712; --auth-grad-2: #38bdf8;
+            }
+
+            /* ---------- Auth Screens (Login / Onboarding) ---------- */
+            .auth-screen {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background: linear-gradient(135deg, var(--auth-grad-1), var(--auth-grad-2));
+                background-size: 200% 200%;
+                animation: gradientDrift 12s ease infinite;
+                transition: background .4s ease;
+            }
+
+            @keyframes gradientDrift {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+
+            .auth-card {
+                background: rgba(255,255,255,.97);
+                border-radius: 22px;
+                padding: 46px 40px;
+                max-width: 460px;
+                width: 100%;
+                box-shadow: 0 25px 60px rgba(0,0,0,.35);
+                text-align: center;
+            }
+
+            .auth-card h1 {
+                color: var(--navy);
+                font-size: 1.6rem;
+                margin-bottom: 8px;
+            }
+
+            .auth-card p.auth-sub {
+                color: var(--muted);
+                margin-bottom: 30px;
+                line-height: 1.5;
+            }
+
+            .google-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                width: 100%;
+                padding: 14px 20px;
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                font-size: 1rem;
+                font-weight: 600;
+                color: #3c4043;
+                cursor: pointer;
+                transition: .25s;
+            }
+
+            .google-btn:hover {
+                box-shadow: 0 8px 20px rgba(0,0,0,.12);
+                transform: translateY(-2px);
+            }
+
+            .auth-card.onboarding-card {
+                max-width: 640px;
+                text-align: left;
+            }
+
+            .auth-divider {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 22px 0;
+                color: var(--muted);
+                font-size: .82rem;
+            }
+
+            .auth-divider::before,
+            .auth-divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
+
+            #emailAuthForm .form-group label {
+                font-size: .85rem;
+            }
+
+            .auth-error {
+                color: #dc2626;
+                font-size: .85rem;
+                min-height: 18px;
+                margin-top: 4px;
+            }
+
+            .auth-toggle-line {
+                margin-top: 20px;
+                font-size: .88rem;
+                color: var(--muted);
+            }
+
+            .auth-toggle-line a {
+                color: var(--gold-dark);
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+            .auth-toggle-line a:hover {
+                text-decoration: underline;
+            }
+
+            .onboarding-card h1 { text-align: center; }
+            .onboarding-card p.auth-sub { text-align: center; }
+
+            .onboard-submit-btn {
+                width: 100%;
+                border: none;
+                border-radius: 14px;
+                background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+                color: #fff;
+                padding: 16px;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: pointer;
+                margin-top: 10px;
+                transition: .3s;
+            }
+
+            .onboard-submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(0,0,0,.25);
+            }
+
+            /* ---------- Header user area ---------- */
+            .header-user {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex: 0 0 auto;
+            }
+
+            .header-user img {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 2px solid var(--gold);
+            }
+
+            .header-user .user-name {
+                color: #fff;
+                font-size: .85rem;
+                font-weight: 600;
+                max-width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .logout-btn {
+                border: 1px solid rgba(255,255,255,.3);
+                background: transparent;
+                color: #fff;
+                padding: 8px 14px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: .82rem;
+                font-weight: 600;
+                transition: .2s;
+            }
+
+            .logout-btn:hover {
+                background: rgba(255,255,255,.12);
+            }
+
+            /* ---------- Theme Switcher ---------- */
+            .theme-fab {
+                position: fixed;
+                bottom: 26px;
+                right: 26px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                z-index: 500;
+                background: conic-gradient(from 180deg, #8b5cf6, #f97316, #06b6d4, #10b981, #f43f5e, #8b5cf6);
+                box-shadow: 0 8px 24px rgba(0,0,0,.3);
+                font-size: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform .25s;
+            }
+
+            .theme-fab:hover { transform: scale(1.08) rotate(15deg); }
+
+            .theme-panel {
+                position: fixed;
+                bottom: 92px;
+                right: 26px;
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 20px 45px rgba(0,0,0,.25);
+                padding: 18px;
+                z-index: 500;
+                display: none;
+                width: 230px;
+            }
+
+            .theme-panel.open { display: block; animation: fade .2s ease; }
+
+            .theme-panel h4 {
+                color: var(--navy);
+                margin-bottom: 12px;
+                font-size: .9rem;
+            }
+
+            .theme-swatches {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+
+            .theme-swatch {
+                width: 100%;
+                aspect-ratio: 1;
+                border-radius: 12px;
+                cursor: pointer;
+                border: 3px solid transparent;
+                transition: .2s;
+                position: relative;
+            }
+
+            .theme-swatch:hover { transform: scale(1.08); }
+            .theme-swatch.active { border-color: var(--navy); }
+
+            .theme-swatch[data-theme="default"] { background: linear-gradient(135deg, #1e293b, #f59e0b); }
+            .theme-swatch[data-theme="royal"] { background: linear-gradient(135deg, #1e1b4b, #8b5cf6); }
+            .theme-swatch[data-theme="sunset"] { background: linear-gradient(135deg, #7c2d12, #f97316); }
+            .theme-swatch[data-theme="ocean"] { background: linear-gradient(135deg, #0c4a6e, #06b6d4); }
+            .theme-swatch[data-theme="emerald"] { background: linear-gradient(135deg, #064e3b, #10b981); }
+            .theme-swatch[data-theme="rose"] { background: linear-gradient(135deg, #881337, #f43f5e); }
+            .theme-swatch[data-theme="midnight"] { background: linear-gradient(135deg, #030712, #38bdf8); }
+
+            /* ---------- Dark / Light Mode ---------- */
+            html[data-mode="dark"] {
+                --bg: #0b1220;
+                --card: #16202f;
+                --border: #2a3648;
+                --text: #e5e9f0;
+                --muted: #94a3b8;
+            }
+
+            html[data-mode="dark"] body { background: var(--bg); color: var(--text); }
+
+            html[data-mode="dark"] .main-nav {
+                background: #101827;
+                box-shadow: 0 4px 14px rgba(0,0,0,.4);
+            }
+
+            html[data-mode="dark"] .tab-btn { background: #1e293b; color: var(--text); }
+            html[data-mode="dark"] .tab-btn.active { background: var(--gold); color: #0b1220; }
+
+            html[data-mode="dark"] .profile-card,
+            html[data-mode="dark"] .stat-card,
+            html[data-mode="dark"] .wizard-card,
+            html[data-mode="dark"] .summary-card,
+            html[data-mode="dark"] .auth-card,
+            html[data-mode="dark"] .modal-content,
+            html[data-mode="dark"] .theme-panel,
+            html[data-mode="dark"] .input-table,
+            html[data-mode="dark"] .landing-card,
+            html[data-mode="dark"] .faq-item {
+                background: var(--card);
+                border-color: var(--border);
+                color: var(--text);
+            }
+
+            html[data-mode="dark"] .auth-card { background: rgba(22,32,47,.97); }
+            html[data-mode="dark"] .detail-row,
+            html[data-mode="dark"] .input-table th,
+            html[data-mode="dark"] .modal-card,
+            html[data-mode="dark"] .faq-question { background: #1e293b; border-color: var(--border); }
+            html[data-mode="dark"] .secondary-btn { background: #334155; color: var(--text); }
+            html[data-mode="dark"] .input-table td,
+            html[data-mode="dark"] .summary-table td,
+            html[data-mode="dark"] .modal-table th,
+            html[data-mode="dark"] .modal-table td,
+            html[data-mode="dark"] .modal-header { border-color: var(--border); }
+            html[data-mode="dark"] .summary-table tr:hover { background: #1e293b; }
+            html[data-mode="dark"] .form-group input,
+            html[data-mode="dark"] .form-group select,
+            html[data-mode="dark"] .input-table input,
+            html[data-mode="dark"] .filter-bar input,
+            html[data-mode="dark"] .filter-bar select {
+                background: #0f172a;
+                color: var(--text);
+                border-color: var(--border);
+            }
+            html[data-mode="dark"] .modal-card { box-shadow: none; }
+            html[data-mode="dark"] .google-btn { background: #1e293b; color: var(--text); border-color: var(--border); }
+            html[data-mode="dark"] ::-webkit-scrollbar-track { background: #1e293b; }
+            html[data-mode="dark"] .landing-nav { background: rgba(11,18,32,.92); }
+            html[data-mode="dark"] .landing-features,
+            html[data-mode="dark"] .landing-faq,
+            html[data-mode="dark"] .landing-contact { background: var(--bg); }
+            html[data-mode="dark"] .screenshot-frame { background: #1e293b; border-color: var(--border); }
+            html[data-mode="dark"] .stat-mini { background: #1e293b; }
+
+            /* ---------- Mode Toggle FAB ---------- */
+            .mode-fab {
+                position: fixed;
+                bottom: 26px;
+                left: 26px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                z-index: 500;
+                background: var(--navy);
+                color: #fff;
+                box-shadow: 0 8px 24px rgba(0,0,0,.3);
+                font-size: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform .25s;
+            }
+            .mode-fab:hover { transform: scale(1.08); }
+
+            /* ---------- Landing Page ---------- */
+            #landingScreen { background: var(--bg); }
+            .landing-nav {
+                position: sticky;
+                top: 0;
+                z-index: 200;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 40px;
+                background: rgba(255,255,255,.92);
+                backdrop-filter: blur(8px);
+                box-shadow: 0 2px 12px rgba(0,0,0,.06);
+            }
+            .landing-nav .logo-wrapper svg { width: 200px; }
+            .landing-nav-links {
+                display: flex;
+                align-items: center;
+                gap: 28px;
+            }
+            .landing-nav-links a {
+                color: var(--text);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: .92rem;
+            }
+            .landing-nav-links a:hover { color: var(--gold-dark); }
+            .landing-nav-cta { display: flex; gap: 10px; }
+            .landing-btn {
+                border: none;
+                border-radius: 12px;
+                padding: 11px 20px;
+                font-weight: 700;
+                font-size: .88rem;
+                cursor: pointer;
+                transition: .25s;
+            }
+            .landing-btn.primary { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #fff; }
+            .landing-btn.ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+            .landing-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.15); }
+
+            .landing-hero {
+                background: linear-gradient(135deg, var(--auth-grad-1), var(--auth-grad-2));
+                background-size: 200% 200%;
+                animation: gradientDrift 14s ease infinite;
+                padding: 90px 40px;
+                text-align: center;
+                color: #fff;
+            }
+            .landing-hero .badge {
+                display: inline-block;
+                background: rgba(255,255,255,.15);
+                border: 1px solid rgba(255,255,255,.3);
+                padding: 7px 16px;
+                border-radius: 30px;
+                font-size: .8rem;
+                font-weight: 600;
+                letter-spacing: .5px;
+                margin-bottom: 22px;
+            }
+            .landing-hero h1 {
+                font-size: 2.6rem;
+                max-width: 780px;
+                margin: 0 auto 18px;
+                line-height: 1.25;
+            }
+            .landing-hero h1 span { color: var(--gold); }
+            .landing-hero p {
+                max-width: 620px;
+                margin: 0 auto 34px;
+                color: #e2e8f0;
+                font-size: 1.05rem;
+                line-height: 1.6;
+            }
+            .landing-hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+            .landing-hero-stats {
+                display: flex;
+                justify-content: center;
+                gap: 50px;
+                margin-top: 55px;
+                flex-wrap: wrap;
+            }
+            .landing-hero-stats .stat-mini h3 { font-size: 1.8rem; color: var(--gold); }
+            .landing-hero-stats .stat-mini p { color: #cbd5e1; font-size: .85rem; margin-top: 4px; }
+
+            .landing-section { padding: 80px 40px; max-width: 1200px; margin: auto; }
+            .landing-section-head { text-align: center; max-width: 640px; margin: 0 auto 50px; }
+            .landing-section-head span.eyebrow {
+                color: var(--gold-dark);
+                font-weight: 700;
+                font-size: .82rem;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+            }
+            .landing-section-head h2 { color: var(--navy); font-size: 2rem; margin: 10px 0 12px; }
+            .landing-section-head p { color: var(--muted); line-height: 1.6; }
+
+            .landing-features { background: #f8fafc; }
+            .landing-features-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+            .landing-card {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                padding: 28px;
+                box-shadow: var(--shadow);
+                transition: .3s;
+            }
+            .landing-card:hover { transform: translateY(-4px); }
+            .landing-card .icon {
+                width: 52px;
+                height: 52px;
+                border-radius: 14px;
+                background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+            .landing-card h3 { color: var(--navy); margin-bottom: 8px; font-size: 1.05rem; }
+            .landing-card p { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+
+            .landing-screenshots-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+            .screenshot-frame {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+            }
+            .screenshot-frame .browser-bar {
+                display: flex;
+                gap: 6px;
+                padding: 10px 14px;
+                background: #e2e8f0;
+            }
+            .screenshot-frame .browser-bar span {
+                width: 10px; height: 10px; border-radius: 50%; background: #94a3b8;
+            }
+            .screenshot-frame .mock-body { padding: 18px; }
+            .screenshot-frame .mock-line { height: 10px; border-radius: 6px; background: #e2e8f0; margin-bottom: 8px; }
+            .screenshot-frame .mock-line.w60 { width: 60%; }
+            .screenshot-frame .mock-line.w80 { width: 80%; }
+            .screenshot-frame .mock-line.gold { background: var(--gold); width: 40%; }
+            .screenshot-frame .mock-block { height: 60px; border-radius: 8px; background: #f1f5f9; margin-top: 10px; }
+            .screenshot-frame figcaption { padding: 14px 18px; font-weight: 700; color: var(--navy); border-top: 1px solid var(--border); text-align: center; font-size: .9rem; }
+
+            .landing-faq { background: #f8fafc; }
+            .faq-item {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                margin-bottom: 12px;
+                overflow: hidden;
+            }
+            .faq-question {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 18px 22px;
+                cursor: pointer;
+                font-weight: 700;
+                color: var(--navy);
+                background: #fff;
+            }
+            .faq-question .chev { transition: transform .25s; color: var(--gold-dark); }
+            .faq-item.open .faq-question .chev { transform: rotate(180deg); }
+            .faq-answer {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height .3s ease;
+                color: var(--muted);
+                font-size: .92rem;
+                line-height: 1.6;
+            }
+            .faq-item.open .faq-answer { max-height: 240px; }
+            .faq-answer-inner { padding: 0 22px 20px; }
+
+            .landing-contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: start;
+            }
+            .landing-contact-info .contact-row {
+                display: flex;
+                gap: 14px;
+                margin-bottom: 22px;
+                align-items: flex-start;
+            }
+            .landing-contact-info .contact-row .icon {
+                width: 42px; height: 42px; border-radius: 12px;
+                background: var(--navy); color: #fff;
+                display: flex; align-items: center; justify-content: center;
+                flex: 0 0 auto;
+            }
+            .landing-contact-info .contact-row h4 { color: var(--navy); font-size: .95rem; margin-bottom: 2px; }
+            .landing-contact-info .contact-row p { color: var(--muted); font-size: .88rem; }
+            .landing-contact-form {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                padding: 28px;
+                box-shadow: var(--shadow);
+            }
+            .landing-contact-form .form-group { margin-bottom: 16px; }
+            .landing-contact-form textarea {
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 14px;
+                font-size: .95rem;
+                outline: none;
+                font-family: inherit;
+                resize: vertical;
+                min-height: 100px;
+            }
+
+            .landing-footer {
+                background: var(--navy);
+                color: #cbd5e1;
+                text-align: center;
+                padding: 26px;
+                font-size: .85rem;
+            }
+
+            @media(max-width: 900px) {
+                .landing-features-grid, .landing-screenshots-grid { grid-template-columns: 1fr; }
+                .landing-contact-grid { grid-template-columns: 1fr; }
+                .landing-nav { padding: 14px 20px; }
+                .landing-nav-links { display: none; }
+                .landing-hero { padding: 60px 20px; }
+                .landing-hero h1 { font-size: 1.9rem; }
+                .landing-section { padding: 55px 20px; }
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                min-height: 100vh;
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            /* Scrollbar */
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #e2e8f0;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--gold);
+                border-radius: 20px;
+            }
+
+            /* Header */
+            .top-header {
+                background: linear-gradient(135deg, var(--header-grad-1), var(--header-grad-2));
+                border-bottom: 4px solid var(--gold);
+                padding: 14px 24px;
+                transition: background .4s ease;
+            }
+
+            .header-inner {
+                max-width: 1400px;
+                margin: auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            .logo-wrapper {
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+            }
+
+            .logo-wrapper svg {
+                width: 280px;
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            .gov-info {
+                flex: 1;
+                text-align: right;
+            }
+
+            .gov-info h2 {
+                color: #fff;
+                font-size: 1.35rem;
+                margin-bottom: 6px;
+            }
+
+            .gov-info p {
+                color: #cbd5e1;
+                line-height: 1.5;
+                font-size: .95rem;
+            }
+
+            /* Navigation */
+            .main-nav {
+                background: #fff;
+                display: flex;
+                gap: 14px;
+                flex-wrap: wrap;
+                padding: 16px 25px;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .tab-btn {
+                border: none;
+                outline: none;
+                background: #f1f5f9;
+                color: var(--text);
+                padding: 14px 22px;
+                border-radius: 14px;
+                cursor: pointer;
+                font-size: .95rem;
+                font-weight: 600;
+                transition: .3s;
+            }
+
+            .tab-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, .10);
+            }
+
+            .tab-btn.active {
+                background: var(--gold);
+                color: #fff;
+            }
+
+            /* Main Container */
+            .app-container {
+                max-width: 1400px;
+                margin: auto;
+                padding: 30px;
+            }
+
+            /* Pages */
+            .page {
+                display: none;
+                animation: fade .25s ease;
+            }
+
+            .active-page {
+                display: block;
+            }
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .dashboard-grid {
+                display: grid;
+                gap: 25px;
+            }
+
+            .profile-card {
+                background: #fff;
+                border-radius: 20px;
+                padding: 30px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .profile-header {
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                margin-bottom: 30px;
+            }
+
+            .profile-icon {
+                width: 65px;
+                height: 65px;
+                border-radius: 50%;
+                background: #f59e0b;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 30px;
+            }
+
+            .profile-header h2 {
+                color: var(--navy);
+                margin-bottom: 4px;
+            }
+
+            .profile-header p {
+                color: var(--muted);
+            }
+
+            .profile-table {
+                display: grid;
+                gap: 14px;
+            }
+
+            .detail-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 16px;
+                background: #f8fafc;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .detail-row span {
+                color: var(--muted);
+            }
+
+            .detail-row strong {
+                color: var(--navy);
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+
+            .stat-card {
+                background: #fff;
+                padding: 28px;
+                text-align: center;
+                border-radius: 20px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+                transition: .3s;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-4px);
+            }
+
+            .stat-icon {
+                font-size: 32px;
+                margin-bottom: 12px;
+            }
+
+            .stat-card h3 {
+                color: var(--gold);
+                font-size: 2rem;
+                margin-bottom: 8px;
+            }
+
+            .stat-card p {
+                color: var(--muted);
+            }
+
+            /* Wizard */
+            .wizard-card {
+                background: #fff;
+                border-radius: 20px;
+                padding: 35px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .wizard-header {
+                margin-bottom: 30px;
+            }
+
+            .wizard-header h2 {
+                color: var(--navy);
+                margin-bottom: 8px;
+            }
+
+            .wizard-header p {
+                color: var(--muted);
+            }
+
+            .progress-wrapper {
+                margin-bottom: 35px;
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 10px;
+                background: #e2e8f0;
+                border-radius: 50px;
+                overflow: hidden;
+            }
+
+            .progress-fill {
+                width: 25%;
+                height: 100%;
+                background: var(--gold);
+                transition: .35s;
+            }
+
+            .step-indicators {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 18px;
+            }
+
+            .step-dot {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                background: #e2e8f0;
+                color: #64748b;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                transition: .3s;
+            }
+
+            .step-dot.active {
+                background: var(--gold);
+                color: #fff;
+            }
+
+            .wizard-step {
+                display: none;
+                animation: fade .25s ease;
+                min-height: 250px;
+            }
+
+            .active-step {
+                display: block;
+            }
+
+            .wizard-step h3 {
+                margin-bottom: 15px;
+                color: var(--navy);
+            }
+
+            .wizard-actions {
+                margin-top: 35px;
+                display: flex;
+                justify-content: space-between;
+                gap: 15px;
+            }
+
+            .wizard-btn {
+                border: none;
+                border-radius: 12px;
+                padding: 14px 24px;
+                cursor: pointer;
+                font-weight: 700;
+                transition: .3s;
+            }
+
+            .primary-btn {
+                background: var(--gold);
+                color: #fff;
+            }
+
+            .secondary-btn {
+                background: #e2e8f0;
+            }
+
+            .wizard-btn:hover {
+                transform: translateY(-2px);
+            }
+
+            /* Input Form Tables CSS */
+            .input-table-wrapper {
+                width: 100%;
+                overflow-x: auto;
+                margin: 15px 0 25px 0;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+            }
+
+            .input-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: #fff;
+            }
+
+            .input-table th {
+                background: #f1f5f9;
+                color: var(--navy);
+                font-weight: 600;
+                padding: 12px;
+                text-align: left;
+                border-bottom: 2px solid var(--border);
+                font-size: 0.9rem;
+            }
+
+            .input-table td {
+                padding: 10px 12px;
+                border-bottom: 1px solid #e2e8f0;
+                vertical-align: middle;
+            }
+
+            .input-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .input-table input {
+                width: 100%;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 10px;
+                font-size: .95rem;
+                outline: none;
+                transition: .2s;
+            }
+
+            .input-table input:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, .15);
+            }
+
+            /* Forms Layout */
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .form-group label {
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: var(--navy);
+            }
+
+            .form-group input,
+            .form-group select {
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 14px;
+                font-size: .95rem;
+                outline: none;
+                transition: .3s;
+            }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, .15);
+            }
+
+            .hidden-field {
+                display: none;
+                animation: fade .25s ease;
+            }
+
+            .save-option-btn {
+                width: 100%;
+                border: none;
+                border-radius: 14px;
+                background: var(--gold);
+                color: #fff;
+                padding: 18px;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: .3s;
+            }
+
+            .save-option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(245, 158, 11, .35);
+            }
+
+            /* Summary */
+            .summary-card {
+                background: #fff;
+                padding: 30px;
+                border-radius: 20px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .summary-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 25px;
+            }
+
+            .summary-buttons {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .summary-btn {
+                border: none;
+                border-radius: 12px;
+                padding: 12px 18px;
+                background: var(--gold);
+                color: #fff;
+                cursor: pointer;
+                font-weight: 700;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            .summary-table {
+                width: 100%;
+                border-collapse: collapse;
+                min-width: 1100px;
+            }
+
+            .summary-table th {
+                background: var(--navy);
+                color: #fff;
+                padding: 15px;
+                text-align: left;
+            }
+
+            .summary-table td {
+                padding: 15px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .summary-table tr:hover {
+                background: #f8fafc;
+            }
+
+            .college-link {
+                color: #2563eb;
+                cursor: pointer;
+                font-weight: 600;
+            }
+
+            .action-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+                min-width: 270px;
+            }
+
+            .action-grid button {
+                border: none;
+                border-radius: 8px;
+                padding: 8px;
+                cursor: pointer;
+                font-size: 12px;
+                color: #fff;
+                font-weight: 600;
+            }
+
+            .btn-edit {
+                background: #3b82f6;
+            }
+
+            .btn-up,
+            .btn-down {
+                background: #64748b;
+            }
+
+            .btn-pdf {
+                background: #f59e0b;
+            }
+
+            .btn-delete {
+                background: #ef4444;
+            }
+
+            .btn-view {
+                background: #10b981;
+            }
+
+            /* Premium Professional Modal Layout Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 23, 42, .75);
+                z-index: 999;
+                overflow: auto;
+                padding: 40px 20px;
+                backdrop-filter: blur(6px);
+            }
+
+            .modal-content {
+                max-width: 1000px;
+                margin: auto;
+                background: #fff;
+                border-radius: 24px;
+                padding: 35px;
+                animation: fade .35s ease-out;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 25px;
+                border-bottom: 2px solid #e2e8f0;
+                padding-bottom: 18px;
+            }
+
+            .modal-header h2 {
+                color: var(--navy);
+                font-size: 1.5rem;
+                font-weight: 800;
+            }
+
+            .modal-close {
+                border: none;
+                background: #ef4444;
+                color: #fff;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: .2s;
+            }
+
+            .modal-close:hover {
+                transform: scale(1.1);
+                background: #dc2626;
+            }
+
+            .modal-dashboard-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+
+            .modal-card {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 16px;
+                padding: 22px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            }
+
+            .modal-card.full-width {
+                grid-column: span 2;
+            }
+
+            .modal-card h3 {
+                margin-bottom: 15px;
+                color: var(--navy);
+                font-size: 1.1rem;
+                font-weight: 700;
+                border-left: 4px solid var(--gold);
+                padding-left: 10px;
+            }
+
+            .modal-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .modal-table th,
+            .modal-table td {
+                padding: 12px 14px;
+                text-align: left;
+                font-size: 0.92rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .modal-table tr:last-child th,
+            .modal-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .modal-table th {
+                background: transparent;
+                color: var(--muted);
+                font-weight: 600;
+                width: 35%;
+            }
+
+            .modal-table td {
+                color: var(--navy);
+                font-weight: 700;
+            }
+
+            .modal-badge {
+                background: linear-gradient(135deg, var(--navy-light), var(--navy));
+                color: #fff;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 0.8rem;
+                letter-spacing: 0.5px;
+            }
+
+            .modal-badge.gold {
+                background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            }
+
+            /* Responsive Media Queries */
+            @media(max-width:900px) {
+                .header-inner {
+                    flex-direction: column;
+                    gap: 14px;
+                    text-align: center;
+                }
+
+                .gov-info {
+                    text-align: center;
+                }
+
+                .stats-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .modal-dashboard-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .modal-card.full-width {
+                    grid-column: span 1;
+                }
+            }
+
+            @media(max-width:768px) {
+                .logo-wrapper svg {
+                    width: 220px;
+                }
+
+                .main-nav {
+                    flex-direction: column;
+                }
+
+                .tab-btn {
+                    width: 100%;
+                }
+
+                .app-container {
+                    padding: 18px;
+                }
+
+                .gov-info h2 {
+                    font-size: 1.1rem;
+                }
+
+                .gov-info p {
+                    font-size: .85rem;
+                }
+
+                .detail-row {
+                    flex-direction: column;
+                    gap: 8px;
+                    text-align: center;
+                }
+
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    </head>
+    <body>
+        <!-- ===================== LANDING PAGE ===================== -->
+        <div id="landingScreen">
+            <nav class="landing-nav">
+                <div class="logo-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
+                        <defs>
+                            <linearGradient id="lgGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b" />
+                                <stop offset="100%" stop-color="#b45309" />
+                            </linearGradient>
+                        </defs>
+                        <g transform="translate(10,10)">
+                            <path d="M 15 75 L 15 45 L 35 60 L 55 45 L 55 75" fill="none" stroke="#1e293b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <polygon points="35,15 65,30 35,45 5,30" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+                            <path d="M 35 30 L 55 38 L 55 52" fill="none" stroke="url(#lgGold)" stroke-width="2.5" stroke-linecap="round" />
+                            <circle cx="55" cy="54" r="3.5" fill="url(#lgGold)" />
+                            <path d="M 35 60 L 55 45 L 70 25" fill="none" stroke="url(#lgGold)" stroke-width="6" stroke-linecap="round" />
+                            <polyline points="58,23 72,23 72,37" fill="none" stroke="url(#lgGold)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </g>
+                        <text x="105" y="58" font-family="'Segoe UI',Arial,sans-serif" font-size="38" font-weight="800" fill="#1e293b"> Maha <tspan fill="url(#lgGold)">Cap</tspan></text>
+                        <text x="107" y="78" font-family="'Segoe UI',Arial,sans-serif" font-size="12" font-weight="500" fill="#64748b" letter-spacing="3"> CAP PRACTICE PORTAL </text>
+                    </svg>
+                </div>
+                <div class="landing-nav-links">
+                    <a href="#landing-features">Features</a>
+                    <a href="#landing-screenshots">Screenshots</a>
+                    <a href="#landing-faq">FAQ</a>
+                    <a href="#landing-contact">Contact</a>
+                </div>
+                <div class="landing-nav-cta">
+                    <button class="landing-btn ghost" id="landingLoginBtn">Sign In</button>
+                    <button class="landing-btn primary" id="landingGetStartedBtn">Get Started</button>
+                </div>
+            </nav>
+
+            <!-- Hero -->
+            <header class="landing-hero">
+                <span class="badge">🎓 MHT-CET CAP Practice Portal &middot; AY 2026-27</span>
+                <h1>Practice your CAP option form <span>before it counts</span></h1>
+                <p>MahaCap lets Maharashtra CET candidates build, reorder, and export their CAP option list in a risk-free practice environment — so the real submission day feels routine, not stressful.</p>
+                <div class="landing-hero-ctas">
+                    <button class="landing-btn primary" id="heroGetStartedBtn" style="padding:15px 26px; font-size:1rem;">Start Practicing Free</button>
+                    <button class="landing-btn ghost" style="padding:15px 26px; font-size:1rem; border-color:rgba(255,255,255,.4); color:#fff;" onclick="document.getElementById('landing-features').scrollIntoView({behavior:'smooth'})">See Features</button>
+                </div>
+                <div class="landing-hero-stats">
+                    <div class="stat-mini"><h3>7</h3><p>Color Themes</p></div>
+                    <div class="stat-mini"><h3>100%</h3><p>Free to Use</p></div>
+                    <div class="stat-mini"><h3>Cloud</h3><p>Synced Data</p></div>
+                </div>
+            </header>
+
+            <!-- Features -->
+            <section class="landing-section landing-features" id="landing-features">
+                <div class="landing-section-head">
+                    <span class="eyebrow">Why MahaCap</span>
+                    <h2>Everything you need to prepare</h2>
+                    <p>Purpose-built for the MHT-CET CAP round, from first draft to final download.</p>
+                </div>
+                <div class="landing-features-grid">
+                    <div class="landing-card"><div class="icon">✍️</div><h3>Guided Option Form Wizard</h3><p>Step-by-step form filling for every college, branch, and quota field — just like the real CAP portal.</p></div>
+                    <div class="landing-card"><div class="icon">📋</div><h3>Drag-Free Reordering</h3><p>Move preferences up or down instantly to fine-tune your priority order before you commit.</p></div>
+                    <div class="landing-card"><div class="icon">📊</div><h3>Live Analytics</h3><p>See total colleges added and your most-selected branches at a glance on your dashboard.</p></div>
+                    <div class="landing-card"><div class="icon">📥</div><h3>Branded PDF Reports</h3><p>Export a polished, professionally branded PDF of your full option list or any single college.</p></div>
+                    <div class="landing-card"><div class="icon">☁️</div><h3>Cloud Sync</h3><p>Sign in with Google or email — your option list is saved securely and available on any device.</p></div>
+                    <div class="landing-card"><div class="icon">🎨</div><h3>Personalized Themes</h3><p>Switch between 7 color themes and light/dark mode to match how you like to work.</p></div>
+                </div>
+            </section>
+
+            <!-- Screenshots -->
+            <section class="landing-section" id="landing-screenshots">
+                <div class="landing-section-head">
+                    <span class="eyebrow">A closer look</span>
+                    <h2>See MahaCap in action</h2>
+                    <p>A quick look at the dashboard, the form wizard, and your option summary.</p>
+                </div>
+                <div class="landing-screenshots-grid">
+                    <figure class="screenshot-frame">
+                        <div class="browser-bar"><span></span><span></span><span></span></div>
+                        <div class="mock-body">
+                            <div class="mock-line gold"></div>
+                            <div class="mock-line w80"></div>
+                            <div class="mock-line w60"></div>
+                            <div class="mock-block"></div>
+                        </div>
+                        <figcaption>Candidate Dashboard</figcaption>
+                    </figure>
+                    <figure class="screenshot-frame">
+                        <div class="browser-bar"><span></span><span></span><span></span></div>
+                        <div class="mock-body">
+                            <div class="mock-line gold"></div>
+                            <div class="mock-line w60"></div>
+                            <div class="mock-line w80"></div>
+                            <div class="mock-block"></div>
+                        </div>
+                        <figcaption>Option Form Wizard</figcaption>
+                    </figure>
+                    <figure class="screenshot-frame">
+                        <div class="browser-bar"><span></span><span></span><span></span></div>
+                        <div class="mock-body">
+                            <div class="mock-line gold"></div>
+                            <div class="mock-line w80"></div>
+                            <div class="mock-line w60"></div>
+                            <div class="mock-block"></div>
+                        </div>
+                        <figcaption>Option Form Summary</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="landing-section landing-faq" id="landing-faq">
+                <div class="landing-section-head">
+                    <span class="eyebrow">Questions</span>
+                    <h2>Frequently asked questions</h2>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">Is MahaCap an official CAP portal? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">No. MahaCap is an independent practice tool to help candidates rehearse filling their option form. Always submit your real preferences on the official CAP portal.</div></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Is it free to use? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">Yes, MahaCap is completely free for students to practice their option form.</div></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Will my data be saved if I come back later? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">Yes. Once you sign in, your profile and option list are saved to your account and sync whenever you log back in.</div></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I download my option list? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">Yes — you can export a branded PDF of your full list, a combined detail report, or a CSV file from the Summary page.</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section class="landing-section landing-contact" id="landing-contact">
+                <div class="landing-section-head">
+                    <span class="eyebrow">Get in touch</span>
+                    <h2>Have a question or feedback?</h2>
+                </div>
+                <div class="landing-contact-grid">
+                    <div class="landing-contact-info">
+                        <div class="contact-row"><div class="icon">✉️</div><div><h4>Email</h4><p>support@mahacap.app</p></div></div>
+                        <div class="contact-row"><div class="icon">📍</div><div><h4>Based in</h4><p>Maharashtra, India</p></div></div>
+                        <div class="contact-row"><div class="icon">💬</div><div><h4>Response time</h4><p>We typically reply within 1-2 business days</p></div></div>
+                    </div>
+                    <form class="landing-contact-form" id="landingContactForm">
+                        <div class="form-group"><label>Your Name</label><input type="text" id="contactName" required placeholder="Full name"></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="contactEmail" required placeholder="you@example.com"></div>
+                        <div class="form-group"><label>Message</label><textarea id="contactMessage" required placeholder="How can we help?"></textarea></div>
+                        <button type="submit" class="landing-btn primary" style="width:100%; padding:14px;">Send Message</button>
+                    </form>
+                </div>
+            </section>
+
+            <footer class="landing-footer">
+                &copy; 2026 MahaCap &middot; Unofficial MHT-CET CAP Practice Portal &middot; Not affiliated with the State Common Entrance Test Cell
+            </footer>
+        </div>
+
+        <!-- ===================== LOGIN SCREEN ===================== -->
+        <div id="loginScreen" class="auth-screen" style="display:none;">
+            <div class="auth-card">
+                <h1>Welcome to MahaCap</h1>
+                <p class="auth-sub" id="authSubText">Sign in to start filling your MHT-CET CAP option form.</p>
+                <button id="googleSignInBtn" class="google-btn">
+                    <svg width="20" height="20" viewBox="0 0 48 48">
+                        <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/>
+                        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
+                        <path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.3 35.3 26.8 36 24 36c-5.3 0-9.6-3.4-11.2-8.1l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/>
+                        <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.3 5.3C40.9 36.5 44 30.9 44 24c0-1.3-.1-2.7-.4-3.5z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+
+                <div class="auth-divider"><span>or</span></div>
+
+                <form id="emailAuthForm">
+                    <div class="form-group" style="margin-bottom:14px;">
+                        <label>Email Address</label>
+                        <input type="email" id="authEmail" required placeholder="you@example.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom:6px;">
+                        <label>Password</label>
+                        <input type="password" id="authPassword" required placeholder="At least 6 characters" minlength="6">
+                    </div>
+                    <p id="authError" class="auth-error"></p>
+                    <button type="submit" id="emailAuthSubmitBtn" class="onboard-submit-btn" style="margin-top:14px;">Sign In</button>
+                </form>
+
+                <p class="auth-toggle-line">
+                    <span id="authToggleLabel">Don't have an account?</span>
+                    <a href="#" id="authToggleLink">Create one</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- ===================== ONBOARDING / CREATE PROFILE SCREEN ===================== -->
+        <div id="onboardingScreen" class="auth-screen" style="display:none;">
+            <div class="auth-card onboarding-card">
+                <h1>Create Your Profile</h1>
+                <p class="auth-sub">Tell us a little about yourself before you start filling your option form.</p>
+                <form id="onboardingForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Candidate Name</label>
+                            <input type="text" id="ob_name" required placeholder="Your full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Application ID</label>
+                            <input type="text" id="ob_appId" required placeholder="e.g. EN26109988">
+                        </div>
+                        <div class="form-group">
+                            <label>General State Merit Rank</label>
+                            <input type="number" id="ob_rank" required placeholder="e.g. 4215">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="ob_category" required>
+                                <option value="">-- Select Category --</option>
+                                <option>Open/General</option>
+                                <option>SC</option>
+                                <option>ST</option>
+                                <option>VJ/NT</option>
+                                <option>NT1</option>
+                                <option>NT2</option>
+                                <option>NT3</option>
+                                <option>OBC</option>
+                                <option>SEBC</option>
+                                <option>EWS</option>
+                                <option>PWD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="onboard-submit-btn">Create Profile & Continue</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===================== MAIN APP SHELL ===================== -->
+        <div id="appShell" style="display:none;">
+        <header class="top-header">
+            <div class="header-inner">
+                <div class="logo-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
+                        <defs>
+                            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b" />
+                                <stop offset="100%" stop-color="#b45309" />
+                            </linearGradient>
+                            <linearGradient id="navyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffffff" />
+                                <stop offset="100%" stop-color="#ffffff" />
+                            </linearGradient>
+                            <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+                                <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.4" flood-color="#000000" />
+                            </filter>
+                        </defs>
+                        <g transform="translate(10,10)" filter="url(#dropShadow)">
+                            <path d="M 15 75 L 15 45 L 35 60 L 55 45 L 55 75" fill="none" stroke="url(#navyGradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <polygon points="35,15 65,30 35,45 5,30" fill="url(#navyGradient)" stroke="#f59e0b" stroke-width="2" />
+                            <path d="M 35 30 L 55 38 L 55 52" fill="none" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round" />
+                            <circle cx="55" cy="54" r="3.5" fill="url(#goldGradient)" />
+                            <path d="M 35 60 L 55 45 L 70 25" fill="none" stroke="url(#goldGradient)" stroke-width="6" stroke-linecap="round" />
+                            <polyline points="58,23 72,23 72,37" fill="none" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </g>
+                        <text x="105" y="58" font-family="'Segoe UI',Arial,sans-serif" font-size="38" font-weight="800" fill="#ffffff"> Maha <tspan fill="url(#goldGradient)">Cap</tspan>
+                        </text>
+                        <text x="107" y="78" font-family="'Segoe UI',Arial,sans-serif" font-size="12" font-weight="500" fill="#94a3b8" letter-spacing="3"> CAP PRACTICE PORTAL </text>
+                    </svg>
+                </div>
+                <div class="gov-info">
+                    <h2>State Common Entrance Test Cell, Maharashtra State</h2>
+                    <p>MHT-CET CAP Option Form Practice Portal <br>Academic Year 2026-27 </p>
+                </div>
+                <div class="header-user">
+                    <img id="userAvatar" src="" alt="" style="display:none;">
+                    <span id="userNameLabel" class="user-name"></span>
+                    <button id="logoutBtn" class="logout-btn">Sign Out</button>
+                </div>
+            </div>
+        </header>
+        <nav class="main-nav">
+            <button class="tab-btn active" data-tab="dashboard">🖥️ Candidate Dashboard</button>
+            <button class="tab-btn" data-tab="form">✍️ Option Form Filling</button>
+            <button class="tab-btn" data-tab="summary">📋 Option Form Summary</button>
+        </nav>
+        <main class="app-container">
+            <section id="dashboard" class="page active-page">
+                <div class="dashboard-grid">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-icon">👤</div>
+                            <div>
+                                <h2>Candidate Profile</h2>
+                                <p>MHT-CET CAP Practice Portal</p>
+                            </div>
+                        </div>
+                        <div class="profile-table">
+                            <div class="detail-row">
+                                <span>Candidate Name</span>
+                                <strong id="candidateName">--</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Application ID</span>
+                                <strong id="candidateAppId">--</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>General State Merit Rank</span>
+                                <strong id="candidateRank">--</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Category</span>
+                                <strong id="candidateCategory">--</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📋</div>
+                            <h3 id="totalPreferences">0</h3>
+                            <p>Total Preferences</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🕒</div>
+                            <h3 id="lastModified">--</h3>
+                            <p>Last Modified</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <h3 id="completionStatus">0%</h3>
+                            <p>Completion Status</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🏛️</div>
+                            <h3 id="totalBranches">0</h3>
+                            <p>Total Branches Added</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="form" class="page">
+                <div class="wizard-card">
+                    <div class="wizard-header">
+                        <h2>MHT-CET CAP Option Form Filling</h2>
+                        <p>Add your college preferences step by step.</p>
+                    </div>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                        <div class="step-indicators">
+                            <div class="step-dot active">1</div>
+                            <div class="step-dot">2</div>
+                            <div class="step-dot">3</div>
+                            <div class="step-dot">4</div>
+                        </div>
+                    </div>
+                    <div id="step1" class="wizard-step active-step">
+                        <h3>Step 1 – Choice Codes & General Information</h3>
+                        <div class="form-group" style="margin-bottom: 25px; padding: 15px; background: #f0fdf4; border: 1px dashed #16a34a; border-radius: 12px;">
+                            <label style="color: #16a34a; font-weight: 700; display: flex; align-items: center; gap: 6px;"> 📋 Duplicate Details from a Previously Added College </label>
+                            <select id="cloneCollegeSelect" style="margin-top: 8px; border-color: #bbf7d0;">
+                                <option value="">-- Select a College to Autofill Profile & Fee Structures --</option>
+                            </select>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>General Choice Code</label>
+                                <input type="text" id="choiceCode" maxlength="9" placeholder="Enter 9 Digit Code">
+                            </div>
+                            <div class="form-group">
+                                <label>TFWS Choice Code</label>
+                                <input type="text" id="tfwsCode" placeholder="123456789T">
+                            </div>
+                            <div class="form-group">
+                                <label>Type of College</label>
+                                <select id="collegeType">
+                                    <option value="">Select</option>
+                                    <option>Home University</option>
+                                    <option>State Level</option>
+                                    <option>Private Deemed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Status of College</label>
+                                <select id="collegeStatus">
+                                    <option value="">Select</option>
+                                    <option>Government</option>
+                                    <option>Govt. Aided</option>
+                                    <option>Autonomous</option>
+                                    <option>Non-Autonomous</option>
+                                    <option>University Department</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step2" class="wizard-step">
+                        <h3>Step 2 – College Profile</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>College Full Name</label>
+                                <input type="text" id="collegeName">
+                            </div>
+                            <div class="form-group">
+                                <label>College Famous Name</label>
+                                <input type="text" id="famousName">
+                            </div>
+                            <div class="form-group">
+                                <label>Landmark</label>
+                                <input type="text" id="landmark">
+                            </div>
+                            <div class="form-group">
+                                <label>District</label>
+                                <select id="district">
+                                    <option value="">Select District</option>
+                                    <option>Pune</option>
+                                    <option>Mumbai City</option>
+                                    <option>Mumbai Suburban</option>
+                                    <option>Nagpur</option>
+                                    <option>Nashik</option>
+                                    <option>Aurangabad</option>
+                                    <option>Kolhapur</option>
+                                    <option>Satara</option>
+                                    <option>Sangli</option>
+                                    <option>Solapur</option>
+                                    <option>Ahmednagar</option>
+                                    <option>Amravati</option>
+                                    <option>Akola</option>
+                                    <option>Buldhana</option>
+                                    <option>Yavatmal</option>
+                                    <option>Washim</option>
+                                    <option>Wardha</option>
+                                    <option>Chandrapur</option>
+                                    <option>Gadchiroli</option>
+                                    <option>Jalgaon</option>
+                                    <option>Dhule</option>
+                                    <option>Nandurbar</option>
+                                    <option>Raigad</option>
+                                    <option>Ratnagiri</option>
+                                    <option>Sindhudurg</option>
+                                    <option>Thane</option>
+                                    <option>Palghar</option>
+                                    <option>Osmanabad</option>
+                                    <option>Latur</option>
+                                    <option>Beed</option>
+                                    <option>Jalna</option>
+                                    <option>Nanded</option>
+                                    <option>Parbhani</option>
+                                    <option>Hingoli</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>University</label>
+                                <select id="university">
+                                    <option value="">Select University</option>
+                                    <option>SPPU</option>
+                                    <option>MU</option>
+                                    <option>DBATU</option>
+                                    <option>BAMU</option>
+                                    <option>RTMNU</option>
+                                    <option>SGBAU</option>
+                                    <option>NMU</option>
+                                    <option>SRTMUN</option>
+                                    <option>SUK</option>
+                                    <option>ICT</option>
+                                    <option>VNMKV</option>
+                                    <option>OTHER</option>
+                                </select>
+                            </div>
+                            <div class="form-group hidden-field" id="customUniversityBox">
+                                <label>Custom University Name</label>
+                                <input type="text" id="customUniversity">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step3" class="wizard-step">
+                        <h3>Step 3 – Financial Information & Seat Matrix</h3>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Branch Name</label>
+                            <select id="branch">
+                                <option value="">Select Branch</option>
+                                <option>Computer Engineering</option>
+                                <option>Information Technology</option>
+                                <option>AI & DS</option>
+                                <option>Electronics & Telecommunication</option>
+                                <option>Mechanical</option>
+                                <option>Civil</option>
+                                <option>Electrical</option>
+                            </select>
+                        </div>
+                        <h4 style="margin-top:15px; color: var(--navy);">1. Fees Structure Matrix</h4>
+                        <div class="input-table-wrapper">
+                            <table class="input-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category Fee Structure</th>
+                                        <th>Amount (Annual INR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Open Category Fees</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openFees" placeholder="e.g. 120000">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC Category Fees</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcFees" placeholder="e.g. 65000">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>PWD-OBC Category Fees</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="pwdFees" placeholder="e.g. 15000">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h4 style="color: var(--navy);">2. Category Seat Allocation Matrix</h4>
+                        <div class="input-table-wrapper">
+                            <table class="input-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category / Quota Type</th>
+                                        <th>General Intake Seats</th>
+                                        <th>Ladies Quota Seats</th>
+                                        <th>PWD Quota Seats</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Open Quota</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openGeneral" placeholder="General">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openLadies" placeholder="Ladies">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openPwd" placeholder="PWD">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC Quota</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcGeneral" placeholder="General">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcLadies" placeholder="Ladies">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcPwd" placeholder="PWD">
+                                        </td>
+                                    </tr>
+                                    <tr style="background: #f8fafc;">
+                                        <td>
+                                            <strong>Gross Seat Allotment</strong>
+                                        </td>
+                                        <td colspan="3">
+                                            <input type="number" id="totalIntake" placeholder="Enter Total Branch Intake Seats">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="step4" class="wizard-step">
+                        <h3>Step 4 – Previous Year Cutoff Matrix</h3>
+                        <div class="input-table-wrapper">
+                            <table class="input-table">
+                                <thead>
+                                    <tr>
+                                        <th>Allocation Category</th>
+                                        <th>Cutoff General Merit Rank</th>
+                                        <th>Cutoff MHT-CET Percentile (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Open General</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="openPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Open PWD</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openPwdRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="openPwdPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC General</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="obcPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC PWD</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcPwdRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="obcPwdPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>TFWS Scheme</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="tfwsRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="tfwsPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top:25px;">
+                            <button id="saveOptionBtn" class="save-option-btn">➕ Add College Option To Permanent List</button>
+                        </div>
+                    </div>
+                    <div class="wizard-actions">
+                        <button id="prevStepBtn" class="wizard-btn secondary-btn">← Back</button>
+                        <button id="nextStepBtn" class="wizard-btn primary-btn">Next →</button>
+                    </div>
+                </div>
+            </section>
+            <section id="summary" class="page">
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <h2>Option Form Summary</h2>
+                        <div class="summary-buttons">
+                            <button id="downloadPdfBtn" class="summary-btn">📥 Download Full Option Form (PDF)</button>
+                            <button id="downloadCombinedPdfBtn" class="summary-btn" style="background: #10b981;">🗂️ Download Combined Colleges Detail (PDF)</button>
+                            <button id="exportCsvBtn" class="summary-btn">📊 Export Option List (CSV)</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>Preference</th>
+                                    <th>Choice Code</th>
+                                    <th>College & Branch</th>
+                                    <th>District</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div id="collegeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>College Information Summary</h2>
+                    <button class="modal-close" onclick="closeModal()">✖</button>
+                </div>
+                <div id="modalBody" class="modal-dashboard-grid"></div>
+            </div>
+        </div>
+
+        <!-- ===================== THEME SWITCHER ===================== -->
+        <button id="themeFab" class="theme-fab" title="Change theme">🎨</button>
+        <div id="themePanel" class="theme-panel">
+            <h4>Choose a Theme</h4>
+            <div class="theme-swatches">
+                <div class="theme-swatch active" data-theme="default" title="Navy & Gold"></div>
+                <div class="theme-swatch" data-theme="royal" title="Royal Purple"></div>
+                <div class="theme-swatch" data-theme="sunset" title="Sunset"></div>
+                <div class="theme-swatch" data-theme="ocean" title="Ocean"></div>
+                <div class="theme-swatch" data-theme="emerald" title="Emerald"></div>
+                <div class="theme-swatch" data-theme="rose" title="Rose"></div>
+                <div class="theme-swatch" data-theme="midnight" title="Midnight"></div>
+            </div>
+        </div>
+        </div><!-- /#appShell -->
+
+        <!-- ===================== LIGHT / DARK MODE TOGGLE (persistent across all screens) ===================== -->
+        <button id="modeToggleFab" class="mode-fab" title="Toggle light / dark mode">🌙</button>
+
+        <script>
+            // Tab Views Navigation Setup
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const pages = document.querySelectorAll('.page');
+
+            function showView(viewId) {
+                pages.forEach(page => page.classList.remove('active-page'));
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active-page');
+                const correspondingTab = document.querySelector(`[data-tab="${viewId}"]`);
+                if (correspondingTab) correspondingTab.classList.add('active');
+            }
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    showView(button.dataset.tab);
+                });
+            });
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyBTR3h8-SJo_IaM6CYao2kClAdP7YnBVZM",
+                authDomain: "mahacap.firebaseapp.com",
+                projectId: "mahacap",
+                storageBucket: "mahacap.firebasestorage.app",
+                messagingSenderId: "182834653431",
+                appId: "1:182834653431:web:baa228a8e555161cd48bf2",
+                measurementId: "G-JL81XFHDD2"
+            };
+            // Initialize Firebase properly using compat styles loaded in header
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const auth = firebase.auth();
+            const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+            // ===================== MULTI-USER AUTH STATE =====================
+            let currentUserId = null;   // Firebase Auth uid -> also the Firestore document key under "users"
+            let userProfile = {};       // { name, applicationId, meritRank, category, theme }
+
+            const landingScreen = document.getElementById('landingScreen');
+            const loginScreen = document.getElementById('loginScreen');
+            const onboardingScreen = document.getElementById('onboardingScreen');
+            const appShell = document.getElementById('appShell');
+
+            document.getElementById('googleSignInBtn').addEventListener('click', () => {
+                clearAuthError();
+                auth.signInWithPopup(googleProvider).catch((error) => {
+                    console.error('Google sign-in error:', error);
+                    showAuthError(error.message);
+                });
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                auth.signOut();
+            });
+
+            // ---------- Email / Password auth ----------
+            let authMode = 'signin'; // 'signin' or 'signup'
+            const authErrorEl = document.getElementById('authError');
+            const authToggleLabel = document.getElementById('authToggleLabel');
+            const authToggleLink = document.getElementById('authToggleLink');
+            const authSubText = document.getElementById('authSubText');
+            const emailAuthSubmitBtn = document.getElementById('emailAuthSubmitBtn');
+
+            function clearAuthError() {
+                authErrorEl.textContent = '';
+            }
+
+            function showAuthError(message) {
+                authErrorEl.textContent = message;
+            }
+
+            function setAuthMode(mode) {
+                authMode = mode;
+                clearAuthError();
+                if (mode === 'signup') {
+                    emailAuthSubmitBtn.textContent = 'Create Account';
+                    authToggleLabel.textContent = 'Already have an account?';
+                    authToggleLink.textContent = 'Sign in';
+                    authSubText.textContent = 'Create an account to start filling your MHT-CET CAP option form.';
+                } else {
+                    emailAuthSubmitBtn.textContent = 'Sign In';
+                    authToggleLabel.textContent = "Don't have an account?";
+                    authToggleLink.textContent = 'Create one';
+                    authSubText.textContent = 'Sign in to start filling your MHT-CET CAP option form.';
+                }
+            }
+
+            document.getElementById('authToggleLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
+            });
+
+            document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                clearAuthError();
+                const email = document.getElementById('authEmail').value.trim();
+                if (!email) {
+                    showAuthError('Enter your email address above first, then click "Forgot password?" again.');
+                    return;
+                }
+                auth.sendPasswordResetEmail(email).then(() => {
+                    alert('Password reset email sent to ' + email + '. Please check your inbox.');
+                }).catch((error) => {
+                    console.error('Password reset error:', error);
+                    showAuthError(error.message);
+                });
+            });
+
+            document.getElementById('emailAuthForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                clearAuthError();
+                const email = document.getElementById('authEmail').value.trim();
+                const password = document.getElementById('authPassword').value;
+                if (!email || !password) return;
+                emailAuthSubmitBtn.disabled = true;
+                const authAction = authMode === 'signup'
+                    ? auth.createUserWithEmailAndPassword(email, password)
+                    : auth.signInWithEmailAndPassword(email, password);
+                authAction.catch((error) => {
+                    console.error('Email auth error:', error);
+                    showAuthError(error.message);
+                }).finally(() => {
+                    emailAuthSubmitBtn.disabled = false;
+                });
+            });
+
+            function showOnly(screen) {
+                landingScreen.style.display = 'none';
+                loginScreen.style.display = 'none';
+                onboardingScreen.style.display = 'none';
+                appShell.style.display = 'none';
+                if (screen === appShell || screen === landingScreen) {
+                    screen.style.display = 'block';
+                } else {
+                    screen.style.display = 'flex';
+                }
+            }
+
+            // Landing page navigation: only jump straight to the login screen once
+            // the visitor has already moved past the landing page (e.g. was signed
+            // in and then signed out). On first load we let them see the landing
+            // page instead of bouncing them straight to the login form.
+            document.getElementById('landingLoginBtn').addEventListener('click', () => {
+                setAuthMode('signin');
+                showOnly(loginScreen);
+            });
+            document.getElementById('landingGetStartedBtn').addEventListener('click', () => {
+                setAuthMode('signup');
+                showOnly(loginScreen);
+            });
+            document.getElementById('heroGetStartedBtn').addEventListener('click', () => {
+                setAuthMode('signup');
+                showOnly(loginScreen);
+            });
+
+            // FAQ accordion
+            document.querySelectorAll('.faq-item').forEach((item) => {
+                item.querySelector('.faq-question').addEventListener('click', () => {
+                    const wasOpen = item.classList.contains('open');
+                    document.querySelectorAll('.faq-item').forEach((i) => i.classList.remove('open'));
+                    if (!wasOpen) item.classList.add('open');
+                });
+            });
+
+            // Contact form (front-end only — no backend wired up yet)
+            document.getElementById('landingContactForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Thanks for reaching out! This form is not yet connected to an inbox, so please email support@mahacap.app directly for now.');
+                e.target.reset();
+            });
+
+            auth.onAuthStateChanged((user) => {
+                if (!user) {
+                    currentUserId = null;
+                    userProfile = {};
+                    document.getElementById('emailAuthForm').reset();
+                    clearAuthError();
+                    // If the visitor already moved past the landing page during this
+                    // session (e.g. they were signed in and just signed out), send
+                    // them to the login form rather than back to the marketing page.
+                    const pastLanding = loginScreen.style.display !== 'none' ||
+                        onboardingScreen.style.display !== 'none' ||
+                        appShell.style.display !== 'none';
+                    if (pastLanding) showOnly(loginScreen);
+                    return;
+                }
+                currentUserId = user.uid;
+                document.getElementById('userNameLabel').textContent = user.displayName || user.email || '';
+                const avatarImg = document.getElementById('userAvatar');
+                if (user.photoURL) {
+                    avatarImg.src = user.photoURL;
+                    avatarImg.style.display = 'inline-block';
+                } else {
+                    avatarImg.style.display = 'none';
+                }
+
+                db.collection('users').doc(currentUserId).get().then((doc) => {
+                    if (doc.exists && doc.data().profile) {
+                        userProfile = doc.data().profile;
+                        optionList = doc.data().savedOptions || [];
+                        applyTheme(userProfile.theme || 'default');
+                        populateProfileUI();
+                        showOnly(appShell);
+                        showView('dashboard');
+                        showStep(1);
+                        updateDashboard();
+                        renderSummary();
+                    } else {
+                        // First-time login: prefill name from Google account and ask for the rest
+                        document.getElementById('ob_name').value = user.displayName || '';
+                        showOnly(onboardingScreen);
+                    }
+                }).catch((error) => {
+                    console.error('Error checking profile:', error);
+                    showOnly(onboardingScreen);
+                });
+            });
+
+            function populateProfileUI() {
+                document.getElementById('candidateName').textContent = userProfile.name || '--';
+                document.getElementById('candidateAppId').textContent = userProfile.applicationId || '--';
+                document.getElementById('candidateRank').textContent = userProfile.meritRank || '--';
+                document.getElementById('candidateCategory').textContent = userProfile.category || '--';
+            }
+
+            // ===================== ONBOARDING FORM SUBMIT =====================
+            document.getElementById('onboardingForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!currentUserId) return;
+                const newProfile = {
+                    name: document.getElementById('ob_name').value.trim(),
+                    applicationId: document.getElementById('ob_appId').value.trim(),
+                    meritRank: document.getElementById('ob_rank').value.trim(),
+                    category: document.getElementById('ob_category').value,
+                    theme: 'default'
+                };
+                if (!newProfile.name || !newProfile.applicationId || !newProfile.meritRank || !newProfile.category) {
+                    alert('Please fill in all profile fields.');
+                    return;
+                }
+                db.collection('users').doc(currentUserId).set({
+                    profile: newProfile,
+                    savedOptions: [],
+                    createdAt: new Date().toLocaleString()
+                }).then(() => {
+                    userProfile = newProfile;
+                    optionList = [];
+                    applyTheme(userProfile.theme);
+                    populateProfileUI();
+                    showOnly(appShell);
+                    showView('dashboard');
+                    showStep(1);
+                    updateDashboard();
+                    renderSummary();
+                }).catch((error) => {
+                    console.error('Error creating profile:', error);
+                    alert('Could not save your profile. Please try again.');
+                });
+            });
+
+            // ===================== GRADIENT THEME SWITCHER =====================
+            const themeFab = document.getElementById('themeFab');
+            const themePanel = document.getElementById('themePanel');
+            themeFab.addEventListener('click', () => themePanel.classList.toggle('open'));
+            document.addEventListener('click', (e) => {
+                if (!themePanel.contains(e.target) && e.target !== themeFab) {
+                    themePanel.classList.remove('open');
+                }
+            });
+
+            function applyTheme(themeName) {
+                if (themeName === 'default') {
+                    document.documentElement.removeAttribute('data-theme');
+                } else {
+                    document.documentElement.setAttribute('data-theme', themeName);
+                }
+                document.querySelectorAll('.theme-swatch').forEach((sw) => {
+                    sw.classList.toggle('active', sw.dataset.theme === themeName);
+                });
+            }
+
+            document.querySelectorAll('.theme-swatch').forEach((swatch) => {
+                swatch.addEventListener('click', () => {
+                    const themeName = swatch.dataset.theme;
+                    applyTheme(themeName);
+                    userProfile.theme = themeName;
+                    if (currentUserId) {
+                        db.collection('users').doc(currentUserId).set({
+                            profile: userProfile
+                        }, { merge: true }).catch((error) => console.error('Error saving theme:', error));
+                    }
+                });
+            });
+
+            // ===================== LIGHT / DARK MODE TOGGLE =====================
+            const modeToggleFab = document.getElementById('modeToggleFab');
+
+            function applyMode(mode) {
+                if (mode === 'dark') {
+                    document.documentElement.setAttribute('data-mode', 'dark');
+                    modeToggleFab.textContent = '☀️';
+                } else {
+                    document.documentElement.removeAttribute('data-mode');
+                    modeToggleFab.textContent = '🌙';
+                }
+                localStorage.setItem('mahacap-mode', mode);
+            }
+
+            modeToggleFab.addEventListener('click', () => {
+                const isDark = document.documentElement.getAttribute('data-mode') === 'dark';
+                applyMode(isDark ? 'light' : 'dark');
+            });
+
+            (function initMode() {
+                const savedMode = localStorage.getItem('mahacap-mode');
+                if (savedMode) {
+                    applyMode(savedMode);
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    applyMode('dark');
+                }
+            })();
+
+            // Application Global Scope State
+            let optionList = [];
+            let editIndex = -1;
+            let currentStep = 1;
+            const wizardSteps = document.querySelectorAll('.wizard-step');
+            const stepDots = document.querySelectorAll('.step-dot');
+            const progressFill = document.getElementById('progressFill');
+            const universitySelect = document.getElementById('university');
+            const customUniversityBox = document.getElementById('customUniversityBox');
+            // Dashboard UI Counters Updates
+            function updateDashboard() {
+                document.getElementById('totalPreferences').textContent = optionList.length;
+                document.getElementById('totalBranches').textContent = optionList.length;
+                document.getElementById('completionStatus').textContent = optionList.length === 0 ? '0%' : '100%';
+                document.getElementById('lastModified').textContent = optionList.length ? new Date().toLocaleDateString() : '--';
+                updateCloneDropdown();
+            }
+            // Dynamic Populator for Clone Option Selection Engine
+            function updateCloneDropdown() {
+                const select = document.getElementById('cloneCollegeSelect');
+                if (!select) return;
+                select.innerHTML = ' < option value = "" > --Select a College to Autofill Profile & Fee Structures-- < /option>';
+                const distinctColleges = [];
+                const trackingMap = new Set();
+                optionList.forEach(item => {
+                    if (!trackingMap.has(item.collegeName)) {
+                        trackingMap.add(item.collegeName);
+                        distinctColleges.push(item);
+                    }
+                });
+                distinctColleges.forEach(item => {
+                    const el = document.createElement('option');
+                    el.value = item.id;
+                    el.textContent = `${item.collegeName} (${item.district})`;
+                    select.appendChild(el);
+                });
+            }
+            // Clone Event Execution Matrix Controller 
+            document.getElementById('cloneCollegeSelect').addEventListener('change', (e) => {
+                const targetId = e.target.value;
+                if (!targetId) return;
+                const record = optionList.find(x => x.id == targetId);
+                if (!record) return;
+                // Autofill execution array
+                document.getElementById('collegeType').value = record.collegeType || '';
+                document.getElementById('collegeStatus').value = record.collegeStatus || '';
+                document.getElementById('collegeName').value = record.collegeName || '';
+                document.getElementById('famousName').value = record.famousName || '';
+                document.getElementById('landmark').value = record.landmark || '';
+                document.getElementById('district').value = record.district || '';
+                document.getElementById('openFees').value = record.openFees || '';
+                document.getElementById('obcFees').value = record.obcFees || '';
+                document.getElementById('pwdFees').value = record.pwdFees || '';
+                const nativeUniversities = ['SPPU', 'MU', 'DBATU', 'BAMU', 'RTMNU', 'SGBAU', 'NMU', 'SRTMUN', 'SUK', 'ICT', 'VNMKV'];
+                if (nativeUniversities.includes(record.university)) {
+                    universitySelect.value = record.university;
+                    customUniversityBox.style.display = 'none';
+                } else {
+                    universitySelect.value = 'OTHER';
+                    customUniversityBox.style.display = 'flex';
+                    document.getElementById('customUniversity').value = record.university || '';
+                }
+                alert(`Successfully cloned details from "${record.collegeName}". Please set the unique Choice Code, Branch, and Cutoffs.`);
+            });
+            // Wizard Step Engine Core
+            function showStep(step) {
+                currentStep = step;
+                wizardSteps.forEach(s => s.classList.remove('active-step'));
+                stepDots.forEach(dot => dot.classList.remove('active'));
+                document.getElementById(`step${step}`).classList.add('active-step');
+                for (let i = 0; i < step; i++) {
+                    if (stepDots[i]) stepDots[i].classList.add('active');
+                }
+                progressFill.style.width = `${step * 25}%`;
+                document.getElementById('prevStepBtn').style.visibility = step === 1 ? 'hidden' : 'visible';
+                document.getElementById('nextStepBtn').style.visibility = step === 4 ? 'hidden' : 'visible';
+            }
+            document.getElementById('nextStepBtn').addEventListener('click', () => {
+                if (currentStep < 4) showStep(currentStep + 1);
+            });
+            document.getElementById('prevStepBtn').addEventListener('click', () => {
+                if (currentStep > 1) showStep(currentStep - 1);
+            });
+            universitySelect.addEventListener('change', () => {
+                customUniversityBox.style.display = universitySelect.value === 'OTHER' ? 'flex' : 'none';
+            });
+
+            function getValue(id) {
+                return document.getElementById(id) ? document.getElementById(id).value.trim() : '';
+            }
+
+            function resetForm() {
+                document.querySelectorAll('#form input').forEach(input => input.value = '');
+                document.querySelectorAll('#form select').forEach(select => select.selectedIndex = 0);
+                customUniversityBox.style.display = 'none';
+                showStep(1);
+                editIndex = -1;
+            }
+
+            function validateForm() {
+                const choiceCode = getValue('choiceCode');
+                if (!/^\d{9}$/.test(choiceCode)) {
+                    alert('General Choice Code must contain exactly 9 digits.');
+                    return false;
+                }
+                const tfws = getValue('tfwsCode');
+                if (tfws && !/^\d{9}T$/.test(tfws)) {
+                    alert('TFWS Code must be 9 digits followed by T.');
+                    return false;
+                }
+                const total = Number(getValue('totalIntake'));
+                const seats = Number(getValue('openGeneral')) + Number(getValue('openLadies')) + Number(getValue('openPwd')) + Number(getValue('obcGeneral')) + Number(getValue('obcLadies')) + Number(getValue('obcPwd'));
+                if (seats > total) {
+                    alert('Seat count cannot exceed total intake.');
+                    return false;
+                }
+                const percentiles = [
+                    getValue('openPercentile'), getValue('openPwdPercentile'),
+                    getValue('obcPercentile'), getValue('obcPwdPercentile'), getValue('tfwsPercentile')
+                ];
+                for (const p of percentiles) {
+                    if (p && (Number(p) < 0 || Number(p) > 100)) {
+                        alert('Percentile must be between 0 and 100.');
+                        return false;
+                    }
+                }
+                return true;
+            }
+            // Save Data to Firebase Firestore, scoped to the signed-in user's document
+            function saveData() {
+                if (!currentUserId) return;
+                db.collection("users").doc(currentUserId).set({
+                    savedOptions: optionList,
+                    lastModified: new Date().toLocaleString()
+                }, { merge: true }).then(() => {
+                    console.log("डेटा क्लाउडवर सुरक्षितपणे सेव्ह झाला!");
+                }).catch((error) => {
+                    console.error("डेटा सेव्ह करताना एरर आला: ", error);
+                    alert("डेटाबेस एरर: डेटा सुरक्षित करण्यात अपयश आले.");
+                });
+            }
+
+            function createOptionObject() {
+                return {
+                    id: editIndex > -1 ? optionList[editIndex].id : Date.now(),
+                    choiceCode: getValue('choiceCode'),
+                    tfwsCode: getValue('tfwsCode'),
+                    collegeType: getValue('collegeType'),
+                    collegeStatus: getValue('collegeStatus'),
+                    collegeName: getValue('collegeName'),
+                    famousName: getValue('famousName'),
+                    landmark: getValue('landmark'),
+                    district: getValue('district'),
+                    university: getValue('university') === 'OTHER' ? getValue('customUniversity') : getValue('university'),
+                    openFees: getValue('openFees'),
+                    obcFees: getValue('obcFees'),
+                    pwdFees: getValue('pwdFees'),
+                    branch: getValue('branch'),
+                    totalIntake: getValue('totalIntake'),
+                    seatMatrix: {
+                        openGeneral: getValue('openGeneral'),
+                        openLadies: getValue('openLadies'),
+                        openPwd: getValue('openPwd'),
+                        obcGeneral: getValue('obcGeneral'),
+                        obcLadies: getValue('obcLadies'),
+                        obcPwd: getValue('obcPwd')
+                    },
+                    cutoffMatrix: {
+                        open: {
+                            rank: getValue('openRank'),
+                            percentile: getValue('openPercentile')
+                        },
+                        openPwd: {
+                            rank: getValue('openPwdRank'),
+                            percentile: getValue('openPwdPercentile')
+                        },
+                        obc: {
+                            rank: getValue('obcRank'),
+                            percentile: getValue('obcPercentile')
+                        },
+                        obcPwd: {
+                            rank: getValue('obcPwdRank'),
+                            percentile: getValue('obcPwdPercentile')
+                        },
+                        tfws: {
+                            rank: getValue('tfwsRank'),
+                            percentile: getValue('tfwsPercentile')
+                        }
+                    },
+                    createdAt: new Date().toLocaleString()
+                };
+            }
+            document.getElementById('saveOptionBtn').addEventListener('click', () => {
+                if (!validateForm()) return;
+                const option = createOptionObject();
+                if (editIndex > -1) {
+                    optionList[editIndex] = option;
+                    alert('College option updated successfully.');
+                } else {
+                    optionList.push(option);
+                    alert('College option added successfully.');
+                }
+                saveData();
+                updateDashboard();
+                renderSummary();
+                resetForm();
+            });
+
+            function renderSummary() {
+                const body = document.getElementById('summaryBody');
+                body.innerHTML = '';
+                optionList.forEach((item, index) => {
+                    body.innerHTML += `
+            
+																																	<tr>
+																																		<td>${index + 1}</td>
+																																		<td>${item.choiceCode}</td>
+																																		<td>
+																																			<span class="college-link" onclick="viewCollege(${index})">
+                        ${item.collegeName} - ${item.branch}
+                    </span>
+																																		</td>
+																																		<td>${item.district}</td>
+																																		<td>
+																																			<div class="action-grid">
+																																				<button class="btn-edit" onclick="editOption(${index})">✏️ Edit</button>
+																																				<button class="btn-up" onclick="moveUp(${index})">▲ Up</button>
+																																				<button class="btn-down" onclick="moveDown(${index})">▼ Down</button>
+																																				<button class="btn-pdf" onclick="downloadCollegePDF(${index})">📄 PDF</button>
+																																				<button class="btn-delete" onclick="deleteOption(${index})">❌ Delete</button>
+																																				<button class="btn-view" onclick="viewCollege(${index})">👁 View</button>
+																																			</div>
+																																		</td>
+																																	</tr>`;
+                });
+            }
+
+            function deleteOption(index) {
+                if (!confirm('Delete this option?')) return;
+                optionList.splice(index, 1);
+                saveData();
+                updateDashboard();
+                renderSummary();
+            }
+
+            function moveUp(index) {
+                if (index === 0) return;
+                [optionList[index], optionList[index - 1]] = [optionList[index - 1], optionList[index]];
+                saveData();
+                renderSummary();
+            }
+
+            function moveDown(index) {
+                if (index === optionList.length - 1) return;
+                [optionList[index], optionList[index + 1]] = [optionList[index + 1], optionList[index]];
+                saveData();
+                renderSummary();
+            }
+
+            function viewCollege(index) {
+                const item = optionList[index];
+                const modalBody = document.getElementById('modalBody');
+                modalBody.innerHTML = `
+        
+																																	<div class="modal-card full-width">
+																																		<h3>🏛️ College Core Infrastructure Profile</h3>
+																																		<table class="modal-table">
+																																			<tr>
+																																				<th>College Full Name</th>
+																																				<td>${item.collegeName}</td>
+																																			</tr>
+																																			<tr>
+																																				<th>Famous Alias Title</th>
+																																				<td>${item.famousName || `
+																																					<span style="color:var(--muted)">N/A</span>`}
+																																				</td>
+																																			</tr>
+																																			<tr>
+																																				<th>Affiliated University</th>
+																																				<td>
+																																					<span class="modal-badge">${item.university}</span>
+																																				</td>
+																																			</tr>
+																																			<tr>
+																																				<th>Geographical District</th>
+																																				<td>${item.district}</td>
+																																			</tr>
+																																			<tr>
+																																				<th>Selected Branch Stream</th>
+																																				<td>
+																																					<span class="modal-badge gold">${item.branch}</span>
+																																				</td>
+																																			</tr>
+																																		</table>
+																																	</div>
+																																	<div class="modal-card">
+																																		<h3>🔑 System Choice Codes</h3>
+																																		<table class="modal-table">
+																																			<tr>
+																																				<th>General Allocation Code</th>
+																																				<td>
+																																					<strong style="color:var(--gold-dark); letter-spacing:0.5px;">${item.choiceCode}</strong>
+																																				</td>
+																																			</tr>
+																																			<tr>
+																																				<th>TFWS Reservation Code</th>
+																																				<td>${item.tfwsCode || `
+																																					<span style="color:var(--muted)">-</span>`}
+																																				</td>
+																																			</tr>
+																																			<tr>
+																																				<th>Status Criteria</th>
+																																				<td>${item.collegeStatus || '-'} (${item.collegeType || '-'})</td>
+																																			</tr>
+																																		</table>
+																																	</div>
+																																	<div class="modal-card">
+																																		<h3>💰 Academic Annual Fee Structure</h3>
+																																		<table class="modal-table">
+																																			<tr>
+																																				<th>Open General Tuition</th>
+																																				<td>INR ${Number(item.openFees).toLocaleString() || '0'} /-</td>
+																																			</tr>
+																																			<tr>
+																																				<th>OBC Non-Creamy Matrix</th>
+																																				<td>INR ${Number(item.obcFees).toLocaleString() || '0'} /-</td>
+																																			</tr>
+																																			<tr>
+																																				<th>PWD Reserved Allotment</th>
+																																				<td>INR ${Number(item.pwdFees).toLocaleString() || '0'} /-</td>
+																																			</tr>
+																																		</table>
+																																	</div>
+																																	<div class="modal-card full-width">
+																																		<h3>📊 Category Seat Allocation Matrix (Gross Cap Capacity: ${item.totalIntake || '0'} Seats)</h3>
+																																		<table class="modal-table" style="text-align: center;">
+																																			<thead>
+																																				<tr style="background: #f1f5f9;">
+																																					<th style="text-align:left;">Quota Stratification Layer</th>
+																																					<th>General Allocation</th>
+																																					<th>Ladies Corner Reserved</th>
+																																					<th>PWD Block Quota</th>
+																																				</tr>
+																																			</thead>
+																																			<tbody>
+																																				<tr>
+																																					<th style="text-align:left; color: var(--navy);">Open Category Layer</th>
+																																					<td>${item.seatMatrix.openGeneral || '0'} Seats</td>
+																																					<td>${item.seatMatrix.openLadies || '0'} Seats</td>
+																																					<td>${item.seatMatrix.openPwd || '0'} Seats</td>
+																																				</tr>
+																																				<tr>
+																																					<th style="text-align:left; color: var(--navy);">OBC Reservation Layer</th>
+																																					<td>${item.seatMatrix.obcGeneral || '0'} Seats</td>
+																																					<td>${item.seatMatrix.obcLadies || '0'} Seats</td>
+																																					<td>${item.seatMatrix.obcPwd || '0'} Seats</td>
+																																				</tr>
+																																			</tbody>
+																																		</table>
+																																	</div>
+																																	<div class="modal-card full-width">
+																																		<h3>📈 Previous Year Execution Cutoff Analysis</h3>
+																																		<table class="modal-table">
+																																			<thead>
+																																				<tr style="background: #f1f5f9;">
+																																					<th>Quota Evaluation Rule</th>
+																																					<th>Merit Rank Position Threshold</th>
+																																					<th>MHT-CET Percentile Value (%)</th>
+																																				</tr>
+																																			</thead>
+																																			<tbody>
+																																				<tr>
+																																					<th>Open General Criteria</th>
+																																					<td># ${item.cutoffMatrix.open.rank || '-'}</td>
+																																					<td>${item.cutoffMatrix.open.percentile || '-'} %</td>
+																																				</tr>
+																																				<tr>
+																																					<th>Open PWD Allocation</th>
+																																					<td># ${item.cutoffMatrix.openPwd.rank || '-'}</td>
+																																					<td>${item.cutoffMatrix.openPwd.percentile || '-'} %</td>
+																																				</tr>
+																																				<tr>
+																																					<th>OBC General Criteria</th>
+																																					<td># ${item.cutoffMatrix.obc.rank || '-'}</td>
+																																					<td>${item.cutoffMatrix.obc.percentile || '-'} %</td>
+																																				</tr>
+																																				<tr>
+																																					<th>OBC PWD Allocation</th>
+																																					<td># ${item.cutoffMatrix.obcPwd.rank || '-'}</td>
+																																					<td>${item.cutoffMatrix.obcPwd.percentile || '-'} %</td>
+																																				</tr>
+																																				<tr>
+																																					<th>TFWS Merit Threshold</th>
+																																					<td># ${item.cutoffMatrix.tfws.rank || '-'}</td>
+																																					<td>${item.cutoffMatrix.tfws.percentile || '-'} %</td>
+																																				</tr>
+																																			</tbody>
+																																		</table>
+																																	</div>`;
+                document.getElementById('collegeModal').style.display = 'block';
+            }
+
+            function closeModal() {
+                document.getElementById('collegeModal').style.display = 'none';
+            }
+
+            function editOption(index) {
+                const item = optionList[index];
+                editIndex = index;
+                document.getElementById('choiceCode').value = item.choiceCode;
+                document.getElementById('tfwsCode').value = item.tfwsCode;
+                document.getElementById('collegeType').value = item.collegeType;
+                document.getElementById('collegeStatus').value = item.collegeStatus;
+                document.getElementById('collegeName').value = item.collegeName;
+                document.getElementById('famousName').value = item.famousName;
+                document.getElementById('landmark').value = item.landmark;
+                document.getElementById('district').value = item.district;
+                document.getElementById('openFees').value = item.openFees;
+                document.getElementById('obcFees').value = item.obcFees;
+                document.getElementById('pwdFees').value = item.pwdFees;
+                document.getElementById('branch').value = item.branch;
+                document.getElementById('totalIntake').value = item.totalIntake;
+                document.getElementById('openGeneral').value = item.seatMatrix.openGeneral;
+                document.getElementById('openLadies').value = item.seatMatrix.openLadies;
+                document.getElementById('openPwd').value = item.seatMatrix.openPwd;
+                document.getElementById('obcGeneral').value = item.seatMatrix.obcGeneral;
+                document.getElementById('obcLadies').value = item.seatMatrix.obcLadies;
+                document.getElementById('obcPwd').value = item.seatMatrix.obcPwd;
+                document.getElementById('openRank').value = item.cutoffMatrix.open.rank;
+                document.getElementById('openPercentile').value = item.cutoffMatrix.open.percentile;
+                document.getElementById('openPwdRank').value = item.cutoffMatrix.openPwd.rank;
+                document.getElementById('openPwdPercentile').value = item.cutoffMatrix.openPwd.percentile;
+                document.getElementById('obcRank').value = item.cutoffMatrix.obc.rank;
+                document.getElementById('obcPercentile').value = item.cutoffMatrix.obc.percentile;
+                document.getElementById('obcPwdRank').value = item.cutoffMatrix.obcPwd.rank;
+                document.getElementById('obcPwdPercentile').value = item.cutoffMatrix.obcPwd.percentile;
+                document.getElementById('tfwsRank').value = item.cutoffMatrix.tfws.rank;
+                document.getElementById('tfwsPercentile').value = item.cutoffMatrix.tfws.percentile;
+                showView('form');
+                showStep(1);
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+            const pdfSharedLogoHeader = `
+        
+																																	<div style="-webkit-print-color-adjust: exact; print-color-adjust: exact; background: linear-gradient(135deg, #1e293b, #0f172a); border-bottom: 4px solid #f59e0b; padding: 20px 30px; display: flex; align-items: center; justify-content: space-between; color: white; border-radius: 8px; margin-bottom: 30px;">
+																																		<div style="display: flex; align-items: center;">
+																																			<svg
+																																				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" style="width: 220px; height: auto;">
+																																				<g transform="translate(10,10)">
+																																					<path d="M 15 75 L 15 45 L 35 60 L 55 45 L 55 75" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+																																					<polygon points="35,15 65,30 35,45 5,30" fill="#ffffff" stroke="#f59e0b" stroke-width="2"/>
+																																					<path d="M 35 30 L 55 38 L 55 52" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+																																					<circle cx="55" cy="54" r="3.5" fill="#f59e0b"/>
+																																					<path d="M 35 60 L 55 45 L 70 25" fill="none" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+																																					<polyline points="58,23 72,23 72,37" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+																																				</g>
+																																				<text x="105" y="58" font-family="'Segoe UI',Arial,sans-serif" font-size="38" font-weight="800" fill="#ffffff">Maha
+																																					<tspan fill="#f59e0b">Cap</tspan>
+																																				</text>
+																																				<text x="107" y="78" font-family="'Segoe UI',Arial,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" letter-spacing="2">CAP PRACTICE PORTAL</text>
+																																			</svg>
+																																		</div>
+																																		<div style="text-align: right; font-family: 'Segoe UI', Arial, sans-serif;">
+																																			<h2 style="margin: 0; font-size: 1.2rem; color: #ffffff;">State Common Entrance Test Cell</h2>
+																																			<p style="margin: 4px 0 0 0; color: #cbd5e1; font-size: 0.85rem;">Option Form Choice Matrix Execution Report</p>
+																																		</div>
+																																	</div>
+    `;
+
+            function downloadFullPDF() {
+                let rows = '';
+                optionList.forEach((item, index) => {
+                    rows += `
+            
+																																	<tr>
+																																		<td style="text-align: center; font-weight: bold;">${index + 1}</td>
+																																		<td style="color: #b45309; font-weight: bold; letter-spacing: 0.5px;">${item.choiceCode}</td>
+																																		<td>
+																																			<div style="font-weight: 600; color: #0f172a;">${item.collegeName}</div>
+																																			<div style="font-size: 0.8rem; color: #64748b;">${item.university} | Status: ${item.collegeStatus || '-'}</div>
+																																		</td>
+																																		<td style="font-weight: 500;">${item.branch}</td>
+																																		<td>${item.district}</td>
+																																	</tr>`;
+                });
+                const html = `
+        
+																																	<html>
+																																		<head>
+																																			<title>MahaCap Preference Form Summary</title>
+																																			<style>
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #f8fafc; color: #1e293b; }
+                h1 { color: #0f172a; font-size: 1.6rem; margin-bottom: 20px; border-left: 5px solid #f59e0b; padding-left: 10px; }
+                .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-radius: 8px; overflow: hidden; }
+                .meta-table td { padding: 12px 15px; border: 1px solid #e2e8f0; font-size: 0.9rem; }
+                .meta-label { color: #64748b; font-weight: 600; width: 25%; background: #f1f5f9 !important; }
+                .main-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.03); border-radius: 8px; overflow: hidden; }
+                .main-table th { background: #0f172a !important; color: #ffffff !important; font-weight: 600; padding: 14px; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+                .main-table td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; font-size: 0.88rem; }
+                .main-table tr:nth-child(even) { background: #f8fafc !important; }
+            </style>
+																																		</head>
+																																		<body>
+            ${pdfSharedLogoHeader}
+            
+																																			<h1>Final Verified Preference Summary List</h1>
+																																			<table class="meta-table">
+																																				<tr>
+																																					<td class="meta-label">Application ID</td>
+																																					<td>
+																																						<strong>${userProfile.applicationId || '-'}</strong>
+																																					</td>
+																																					<td class="meta-label">Merit Rank Position</td>
+																																					<td>
+																																						<strong>${userProfile.meritRank || '-'}</strong>
+																																					</td>
+																																				</tr>
+																																				<tr>
+																																					<td class="meta-label">Candidate Name</td>
+																																					<td>
+																																						<strong>${userProfile.name || '-'}</strong>
+																																					</td>
+																																					<td class="meta-label">Reservation Group</td>
+																																					<td>
+																																						<strong>${userProfile.category || '-'}</strong>
+																																					</td>
+																																				</tr>
+																																			</table>
+																																			<table class="main-table">
+																																				<thead>
+																																					<tr>
+																																						<th style="width: 8%; text-align: center;">Pref.</th>
+																																						<th style="width: 15%;">Choice Code</th>
+																																						<th style="width: 45%;">College Infrastructure Name</th>
+																																						<th style="width: 20%;">Allocated Branch</th>
+																																						<th style="width: 12%;">District</th>
+																																					</tr>
+																																				</thead>
+																																				<tbody>
+                    ${rows || `
+																																					<tr>
+																																						<td colspan="5" style="text-align:center; color:#64748b; padding:30px;">No preferences added to your choice script list yet.</td>
+																																					</tr>`}
+                
+																																				</tbody>
+																																			</table>
+																																		</body>
+																																	</html>`;
+                const win = window.open('', '_blank');
+                win.document.write(html);
+                win.document.close();
+                win.print();
+            }
+
+            function downloadCombinedCollegesPDF() {
+                if (optionList.length === 0) {
+                    alert("कृपया लिस्टमध्ये आधी कॉलेजेस जोडा.");
+                    return;
+                }
+                let allCollegesHtml = '';
+                optionList.forEach((c, index) => {
+                    allCollegesHtml += `
+        
+																																	<div style="page-break-after: always; margin-bottom: 30px;">
+            ${pdfSharedLogoHeader}
+            
+            
+																																		<div style="background: white; border-left: 6px solid #f59e0b; padding: 15px 20px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+																																			<h1 style="color: #0f172a; font-size: 1.5rem; margin: 0 0 10px 0;">#${index + 1} - ${c.collegeName}</h1>
+																																			<p style="margin:0; color:#64748b; font-weight:500;">Famous Identity Title: 
+																																				<strong>${c.famousName || 'N/A'}</strong>
+																																			</p>
+																																		</div>
+																																		<div class="grid-info">
+																																			<div>
+																																				<h2>General Administration Info</h2>
+																																				<table class="info-table">
+																																					<tr>
+																																						<td class="label-cell">General Choice Code</td>
+																																						<td style="font-weight:700; color:#b45309;">${c.choiceCode}</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">TFWS Choice Code</td>
+																																						<td>${c.tfwsCode || '-'}</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">Branch Stream</td>
+																																						<td style="font-weight:600;">${c.branch}</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">University Affiliation</td>
+																																						<td>${c.university}</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">District Location</td>
+																																						<td>${c.district}</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">College Status</td>
+																																						<td>${c.collegeStatus}</td>
+																																					</tr>
+																																				</table>
+																																			</div>
+																																			<div>
+																																				<h2>Annual Fee Structures Matrix</h2>
+																																				<table class="info-table">
+																																					<thead>
+																																						<tr>
+																																							<th colspan="2">Category Group Tuition & Allied Fees</th>
+																																						</tr>
+																																					</thead>
+																																					<tr>
+																																						<td class="label-cell">Open Quota Fees</td>
+																																						<td style="font-weight:700; color:#0f172a;">INR ${Number(c.openFees).toLocaleString() || '0'} /-</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">OBC Quota Fees</td>
+																																						<td>INR ${Number(c.obcFees).toLocaleString() || '0'} /-</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">PWD Disabled Fees</td>
+																																						<td>INR ${Number(c.pwdFees).toLocaleString() || '0'} /-</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">Total Allocated Intake</td>
+																																						<td>
+																																							<strong>${c.totalIntake || '0'} Seats</strong>
+																																						</td>
+																																					</tr>
+																																				</table>
+																																			</div>
+																																		</div>
+																																		<div class="grid-info">
+																																			<div>
+																																				<h2>Seat Allotment Distribution</h2>
+																																				<table class="info-table">
+																																					<thead>
+																																						<tr>
+																																							<th>Quota Classification</th>
+																																							<th>General Block</th>
+																																							<th>Ladies Corner</th>
+																																							<th>PWD Block</th>
+																																						</tr>
+																																					</thead>
+																																					<tr>
+																																						<td class="label-cell">Open Category</td>
+																																						<td>${c.seatMatrix.openGeneral || '0'}</td>
+																																						<td>${c.seatMatrix.openLadies || '0'}</td>
+																																						<td>${c.seatMatrix.openPwd || '0'}</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">OBC Category</td>
+																																						<td>${c.seatMatrix.obcGeneral || '0'}</td>
+																																						<td>${c.seatMatrix.obcLadies || '0'}</td>
+																																						<td>${c.seatMatrix.obcPwd || '0'}</td>
+																																					</tr>
+																																				</table>
+																																			</div>
+																																			<div>
+																																				<h2>Previous Year Cutoff Analysis</h2>
+																																				<table class="info-table">
+																																					<thead>
+																																						<tr>
+																																							<th>Quota Layer Category</th>
+																																							<th>Merit Cutoff Rank</th>
+																																							<th>MHT-CET Percentile</th>
+																																						</tr>
+																																					</thead>
+																																					<tr>
+																																						<td class="label-cell">Open General</td>
+																																						<td>${c.cutoffMatrix.open.rank || '-'}</td>
+																																						<td>${c.cutoffMatrix.open.percentile || '-'} %</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">Open PWD</td>
+																																						<td>${c.cutoffMatrix.openPwd.rank || '-'}</td>
+																																						<td>${c.cutoffMatrix.openPwd.percentile || '-'} %</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">OBC General</td>
+																																						<td>${c.cutoffMatrix.obc.rank || '-'}</td>
+																																						<td>${c.cutoffMatrix.obc.percentile || '-'} %</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">OBC PWD</td>
+																																						<td>${c.cutoffMatrix.obcPwd.rank || '-'}</td>
+																																						<td>${c.cutoffMatrix.obcPwd.percentile || '-'} %</td>
+																																					</tr>
+																																					<tr>
+																																						<td class="label-cell">TFWS Seats</td>
+																																						<td>${c.cutoffMatrix.tfws.rank || '-'}</td>
+																																						<td>${c.cutoffMatrix.tfws.percentile || '-'} %</td>
+																																					</tr>
+																																				</table>
+																																			</div>
+																																		</div>
+																																	</div>`;
+                });
+                const html = `
+    
+																																	<html>
+																																		<head>
+																																			<title>Combined Colleges Technical Profile Summary</title>
+																																			<style>
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #f8fafc; color: #1e293b; }
+            h2 { color: #b45309; font-size: 1.1rem; margin-top: 25px; border-bottom: 2px solid #cbd5e1; padding-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+            .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; margin-bottom: 20px; }
+            .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+            .info-table th { background: #1e293b !important; color: white !important; padding: 10px 12px; text-align: left; font-size: 0.85rem; }
+            .info-table td { padding: 10px 12px; border: 1px solid #e2e8f0; font-size: 0.88rem; }
+            .label-cell { background: #f8fafc !important; font-weight: 600; color: #475569; width: 40%; }
+        </style>
+																																		</head>
+																																		<body>
+        ${allCollegesHtml}
+    </body>
+																																	</html>`;
+                const win = window.open('', '_blank');
+                win.document.write(html);
+                win.document.close();
+                win.print();
+            }
+            // नवीन बटनला इव्हेंट लिसनर जोडणे
+            document.getElementById('downloadCombinedPdfBtn').addEventListener('click', downloadCombinedCollegesPDF);
+
+            function downloadCollegePDF(index) {
+                const c = optionList[index];
+                const html = `
+        
+																																	<html>
+																																		<head>
+																																			<title>${c.collegeName} - Technical Summary Profile</title>
+																																			<style>
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #f8fafc; color: #1e293b; }
+                h1 { color: #0f172a; font-size: 1.5rem; margin: 0 0 10px 0; }
+                h2 { color: #b45309; font-size: 1.1rem; margin-top: 25px; border-bottom: 2px solid #cbd5e1; padding-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+                .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+                .info-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+                .info-table th { background: #1e293b !important; color: white !important; padding: 10px 12px; text-align: left; font-size: 0.85rem; }
+                .info-table td { padding: 10px 12px; border: 1px solid #e2e8f0; font-size: 0.88rem; }
+                .label-cell { background: #f8fafc !important; font-weight: 600; color: #475569; width: 40%; }
+            </style>
+																																		</head>
+																																		<body>
+            ${pdfSharedLogoHeader}
+            
+            
+																																			<div style="background: white; border-left: 6px solid #f59e0b; padding: 15px 20px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+																																				<h1>${c.collegeName}</h1>
+																																				<p style="margin:0; color:#64748b; font-weight:500;">Famous Identity Title: 
+																																					<strong>${c.famousName || 'N/A'}</strong>
+																																				</p>
+																																			</div>
+																																			<div class="grid-info">
+																																				<div>
+																																					<h2>General Administration Info</h2>
+																																					<table class="info-table">
+																																						<tr>
+																																							<td class="label-cell">General Choice Code</td>
+																																							<td style="font-weight:700; color:#b45309;">${c.choiceCode}</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">TFWS Choice Code</td>
+																																							<td>${c.tfwsCode || '-'}</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">Branch Stream</td>
+																																							<td style="font-weight:600;">${c.branch}</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">University Affiliation</td>
+																																							<td>${c.university}</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">District Location</td>
+																																							<td>${c.district}</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">College Status</td>
+																																							<td>${c.collegeStatus}</td>
+																																						</tr>
+																																					</table>
+																																				</div>
+																																				<div>
+																																					<h2>Annual Fee Structures Matrix</h2>
+																																					<table class="info-table">
+																																						<thead>
+																																							<tr>
+																																								<th colspan="2">Category Group Tuition & Allied Fees</th>
+																																							</tr>
+																																						</thead>
+																																						<tr>
+																																							<td class="label-cell">Open Quota Fees</td>
+																																							<td style="font-weight:700; color:#0f172a;">INR ${c.openFees || '0'} /-</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">OBC Quota Fees</td>
+																																							<td>INR ${c.obcFees || '0'} /-</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">PWD Disabled Fees</td>
+																																							<td>INR ${c.pwdFees || '0'} /-</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">Total Allocated Intake</td>
+																																							<td>
+																																								<strong>${c.totalIntake || '0'} Seats</strong>
+																																							</td>
+																																						</tr>
+																																					</table>
+																																				</div>
+																																			</div>
+																																			<div class="grid-info">
+																																				<div>
+																																					<h2>Seat Allotment Distribution</h2>
+																																					<table class="info-table">
+																																						<thead>
+																																							<tr>
+																																								<th>Quota Classification</th>
+																																								<th>General Block</th>
+																																								<th>Ladies Corner</th>
+																																								<th>PWD Block</th>
+																																							</tr>
+																																						</thead>
+																																						<tr>
+																																							<td class="label-cell">Open Category</td>
+																																							<td>${c.seatMatrix.openGeneral || '0'}</td>
+																																							<td>${c.seatMatrix.openLadies || '0'}</td>
+																																							<td>${c.seatMatrix.openPwd || '0'}</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">OBC Category</td>
+																																							<td>${c.seatMatrix.obcGeneral || '0'}</td>
+																																							<td>${c.seatMatrix.obcLadies || '0'}</td>
+																																							<td>${c.seatMatrix.obcPwd || '0'}</td>
+																																						</tr>
+																																					</table>
+																																				</div>
+																																				<div>
+																																					<h2>Previous Year Cutoff Analysis</h2>
+																																					<table class="info-table">
+																																						<thead>
+																																							<tr>
+																																								<th>Quota Layer Category</th>
+																																								<th>Merit Cutoff Rank</th>
+																																								<th>MHT-CET Percentile</th>
+																																							</tr>
+																																						</thead>
+																																						<tr>
+																																							<td class="label-cell">Open General</td>
+																																							<td>${c.cutoffMatrix.open.rank || '-'}</td>
+																																							<td>${c.cutoffMatrix.open.percentile || '-'} %</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">Open PWD</td>
+																																							<td>${c.cutoffMatrix.openPwd.rank || '-'}</td>
+																																							<td>${c.cutoffMatrix.openPwd.percentile || '-'} %</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">OBC General</td>
+																																							<td>${c.cutoffMatrix.obc.rank || '-'}</td>
+																																							<td>${c.cutoffMatrix.obc.percentile || '-'} %</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">OBC PWD</td>
+																																							<td>${c.cutoffMatrix.obcPwd.rank || '-'}</td>
+																																							<td>${c.cutoffMatrix.obcPwd.percentile || '-'} %</td>
+																																						</tr>
+																																						<tr>
+																																							<td class="label-cell">TFWS Seats</td>
+																																							<td>${c.cutoffMatrix.tfws.rank || '-'}</td>
+																																							<td>${c.cutoffMatrix.tfws.percentile || '-'} %</td>
+																																						</tr>
+																																					</table>
+																																				</div>
+																																			</div>
+																																		</body>
+																																	</html>`;
+                const win = window.open('', '_blank');
+                win.document.write(html);
+                win.document.close();
+                win.print();
+            }
+
+            function exportCSV() {
+                let csv = 'Preference,Choice Code,College,Branch,District\n';
+                optionList.forEach((item, index) => {
+                    csv += `${index + 1},${item.choiceCode},"${item.collegeName}","${item.branch}","${item.district}"\n`;
+                });
+                const blob = new Blob([csv], {
+                    type: 'text/csv'
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'option-list.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+            document.getElementById('downloadPdfBtn').addEventListener('click', downloadFullPDF);
+            document.getElementById('exportCsvBtn').addEventListener('click', exportCSV);
+            // Note: data loading/dashboard init now happens inside auth.onAuthStateChanged above,
+            // once we know which user is signed in and their Firestore document is available.
+        </script>
+    </body>
+</html>

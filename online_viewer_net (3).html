@@ -1,0 +1,3854 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MahaCap - CAP Practice Portal</title>
+        <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+        <style>
+            :root {
+                --navy: #0f172a;
+                --navy-light: #1e293b;
+                --gold: #f59e0b;
+                --gold-dark: #b45309;
+                --bg: #f8fafc;
+                --card: #ffffff;
+                --border: #cbd5e1;
+                --text: #1e293b;
+                --muted: #64748b;
+                --radius: 18px;
+                --shadow: 0 10px 30px rgba(15, 23, 42, .12);
+                --header-grad-1: #1e293b;
+                --header-grad-2: #0f172a;
+                --auth-grad-1: #0f172a;
+                --auth-grad-2: #b45309;
+            }
+
+            /* ---------- Gradient Themes ---------- */
+            html[data-theme="royal"] {
+                --navy: #1e1b4b; --navy-light: #312e81; --gold: #8b5cf6; --gold-dark: #6d28d9;
+                --header-grad-1: #312e81; --header-grad-2: #1e1b4b;
+                --auth-grad-1: #1e1b4b; --auth-grad-2: #7c3aed;
+            }
+            html[data-theme="sunset"] {
+                --navy: #7c2d12; --navy-light: #9a3412; --gold: #f97316; --gold-dark: #c2410c;
+                --header-grad-1: #9a3412; --header-grad-2: #7c2d12;
+                --auth-grad-1: #7c2d12; --auth-grad-2: #f97316;
+            }
+            html[data-theme="ocean"] {
+                --navy: #0c4a6e; --navy-light: #075985; --gold: #06b6d4; --gold-dark: #0891b2;
+                --header-grad-1: #075985; --header-grad-2: #0c4a6e;
+                --auth-grad-1: #0c4a6e; --auth-grad-2: #06b6d4;
+            }
+            html[data-theme="emerald"] {
+                --navy: #064e3b; --navy-light: #065f46; --gold: #10b981; --gold-dark: #047857;
+                --header-grad-1: #065f46; --header-grad-2: #064e3b;
+                --auth-grad-1: #064e3b; --auth-grad-2: #10b981;
+            }
+            html[data-theme="rose"] {
+                --navy: #881337; --navy-light: #9f1239; --gold: #f43f5e; --gold-dark: #be123c;
+                --header-grad-1: #9f1239; --header-grad-2: #881337;
+                --auth-grad-1: #881337; --auth-grad-2: #f43f5e;
+            }
+            html[data-theme="midnight"] {
+                --navy: #030712; --navy-light: #111827; --gold: #38bdf8; --gold-dark: #0284c7;
+                --header-grad-1: #111827; --header-grad-2: #030712;
+                --auth-grad-1: #030712; --auth-grad-2: #38bdf8;
+            }
+            html[data-theme="forest"] {
+                --navy: #14532d; --navy-light: #166534; --gold: #a3e635; --gold-dark: #65a30d;
+                --header-grad-1: #166534; --header-grad-2: #14532d;
+                --auth-grad-1: #14532d; --auth-grad-2: #a3e635;
+            }
+            html[data-theme="graphite"] {
+                --navy: #27272a; --navy-light: #3f3f46; --gold: #fb923c; --gold-dark: #c2410c;
+                --header-grad-1: #3f3f46; --header-grad-2: #27272a;
+                --auth-grad-1: #27272a; --auth-grad-2: #fb923c;
+            }
+
+            /* ---------- Auth Screens (Login / Onboarding) ---------- */
+            .auth-screen {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background: linear-gradient(135deg, var(--auth-grad-1), var(--auth-grad-2));
+                background-size: 200% 200%;
+                animation: gradientDrift 12s ease infinite;
+                transition: background .4s ease;
+            }
+
+            @keyframes gradientDrift {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+
+            .auth-card {
+                background: rgba(255,255,255,.97);
+                border-radius: 22px;
+                padding: 46px 40px;
+                max-width: 460px;
+                width: 100%;
+                box-shadow: 0 25px 60px rgba(0,0,0,.35);
+                text-align: center;
+            }
+
+            .auth-card h1 {
+                color: var(--navy);
+                font-size: 1.6rem;
+                margin-bottom: 8px;
+            }
+
+            .auth-card p.auth-sub {
+                color: var(--muted);
+                margin-bottom: 30px;
+                line-height: 1.5;
+            }
+
+            .google-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                width: 100%;
+                padding: 14px 20px;
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                font-size: 1rem;
+                font-weight: 600;
+                color: #3c4043;
+                cursor: pointer;
+                transition: .25s;
+            }
+
+            .google-btn:hover {
+                box-shadow: 0 8px 20px rgba(0,0,0,.12);
+                transform: translateY(-2px);
+            }
+
+            .auth-card.onboarding-card {
+                max-width: 640px;
+                text-align: left;
+            }
+
+            .auth-divider {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 22px 0;
+                color: var(--muted);
+                font-size: .82rem;
+            }
+
+            .auth-divider::before,
+            .auth-divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
+
+            #emailAuthForm .form-group label {
+                font-size: .85rem;
+            }
+
+            .auth-error {
+                color: #dc2626;
+                font-size: .85rem;
+                min-height: 18px;
+                margin-top: 4px;
+            }
+
+            .auth-toggle-line {
+                margin-top: 20px;
+                font-size: .88rem;
+                color: var(--muted);
+            }
+
+            .auth-toggle-line a {
+                color: var(--gold-dark);
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+            .auth-toggle-line a:hover {
+                text-decoration: underline;
+            }
+
+            .onboarding-card h1 { text-align: center; }
+            .onboarding-card p.auth-sub { text-align: center; }
+
+            .onboard-submit-btn {
+                width: 100%;
+                border: none;
+                border-radius: 14px;
+                background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+                color: #fff;
+                padding: 16px;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: pointer;
+                margin-top: 10px;
+                transition: .3s;
+            }
+
+            .onboard-submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(0,0,0,.25);
+            }
+
+            /* ---------- Header user area ---------- */
+            .header-user {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex: 0 0 auto;
+            }
+
+            .header-user img {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 2px solid var(--gold);
+            }
+
+            .header-user .user-name {
+                color: #fff;
+                font-size: .85rem;
+                font-weight: 600;
+                max-width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .logout-btn {
+                border: 1px solid rgba(255,255,255,.3);
+                background: transparent;
+                color: #fff;
+                padding: 8px 14px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: .82rem;
+                font-weight: 600;
+                transition: .2s;
+            }
+
+            .logout-btn:hover {
+                background: rgba(255,255,255,.12);
+            }
+
+            /* ---------- Header avatar dropdown ---------- */
+            .user-menu-wrap { position: relative; }
+
+            .avatar-btn {
+                width: 42px; height: 42px; padding: 0;
+                border-radius: 50%;
+                border: 2px solid var(--gold);
+                background: rgba(255,255,255,.12);
+                cursor: pointer;
+                display: flex; align-items: center; justify-content: center;
+                overflow: hidden;
+                transition: transform .2s, box-shadow .2s;
+            }
+            .avatar-btn:hover { transform: scale(1.05); box-shadow: 0 0 0 4px rgba(245,158,11,.22); }
+            .avatar-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+            .avatar-initials {
+                color: #fff; font-weight: 700; font-size: .95rem; letter-spacing: .5px;
+            }
+            .avatar-initials.sm { font-size: .8rem; }
+
+            .user-dropdown {
+                position: absolute; top: calc(100% + 12px); right: 0;
+                width: 252px;
+                background: var(--card);
+                color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                box-shadow: 0 18px 40px rgba(15,23,42,.28);
+                padding: 8px;
+                opacity: 0; visibility: hidden;
+                transform: translateY(-8px) scale(.97);
+                transition: opacity .18s ease, transform .18s ease, visibility .18s;
+                z-index: 900;
+            }
+            .user-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+            .user-dropdown-head {
+                display: flex; align-items: center; gap: 10px;
+                padding: 10px 10px 12px;
+                border-bottom: 1px solid var(--border);
+                margin-bottom: 6px;
+            }
+            .user-dropdown-head img,
+            .user-dropdown-head .avatar-initials {
+                width: 36px; height: 36px; border-radius: 50%;
+                object-fit: cover; flex: 0 0 auto;
+                display: flex; align-items: center; justify-content: center;
+                background: linear-gradient(135deg, var(--navy-light), var(--gold));
+            }
+            .user-dropdown-id { min-width: 0; display: flex; flex-direction: column; }
+            .user-dropdown-id strong { font-size: .9rem; font-weight: 700; }
+            .user-dropdown-id span {
+                font-size: .74rem; color: var(--muted);
+                overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 165px;
+            }
+
+            .user-dropdown-item {
+                width: 100%; display: flex; align-items: center; gap: 10px;
+                background: transparent; border: none; cursor: pointer;
+                padding: 11px 10px; border-radius: 10px;
+                font-size: .88rem; font-weight: 600; color: var(--text);
+                text-align: left; transition: background .15s, color .15s;
+            }
+            .user-dropdown-item svg { width: 17px; height: 17px; flex: 0 0 auto; }
+            .user-dropdown-item:hover { background: color-mix(in srgb, var(--gold) 16%, transparent); }
+            .user-dropdown-item.danger { color: #ef4444; }
+            .user-dropdown-item.danger:hover { background: rgba(239,68,68,.12); }
+
+            /* ---------- Edit Profile modal ---------- */
+            .ep-overlay {
+                position: fixed; inset: 0; z-index: 1200;
+                display: flex; align-items: center; justify-content: center;
+                padding: 20px;
+                background: rgba(15,23,42,.6);
+                backdrop-filter: blur(7px);
+                opacity: 0; visibility: hidden;
+                transition: opacity .22s ease, visibility .22s;
+            }
+            .ep-overlay.open { opacity: 1; visibility: visible; }
+
+            .ep-modal {
+                width: 100%; max-width: 440px;
+                max-height: 90vh; overflow-y: auto;
+                background: var(--card); color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: 22px;
+                padding: 26px;
+                box-shadow: 0 28px 60px rgba(0,0,0,.32);
+                transform: translateY(14px) scale(.96);
+                transition: transform .25s cubic-bezier(.2,.8,.3,1);
+            }
+            .ep-overlay.open .ep-modal { transform: translateY(0) scale(1); }
+
+            .ep-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+            .ep-head h2 { font-size: 1.25rem; font-weight: 800; color: var(--navy); }
+            html[data-mode="dark"] .ep-head h2 { color: var(--text); }
+            .ep-head p { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+            .ep-close {
+                border: 1px solid var(--border); background: transparent; color: var(--muted);
+                width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+                font-size: 15px; line-height: 1; flex: 0 0 auto; transition: .2s;
+            }
+            .ep-close:hover { background: #ef4444; border-color: #ef4444; color: #fff; }
+
+            .ep-field { margin-bottom: 14px; }
+            .ep-field label { display: block; font-size: .78rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+            .ep-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .ep-field input,
+            .ep-field select {
+                width: 100%; padding: 12px 14px; font-size: .92rem; font-family: inherit;
+                border: 1px solid var(--border); border-radius: 12px;
+                background: var(--bg); color: var(--text); transition: .2s;
+            }
+            .ep-field select { appearance: none; cursor: pointer; }
+            .ep-field input:focus,
+            .ep-field select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent); }
+
+            .ep-actions { display: flex; gap: 10px; margin-top: 20px; }
+            .ep-btn {
+                flex: 1; padding: 13px; border-radius: 12px; cursor: pointer;
+                font-size: .9rem; font-weight: 700; font-family: inherit; transition: .2s;
+            }
+            .ep-btn.save { border: none; color: #fff; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); }
+            .ep-btn.save:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.2); }
+            .ep-btn.save:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+            .ep-btn.cancel { background: transparent; border: 1px solid var(--border); color: var(--text); }
+            .ep-btn.cancel:hover { background: color-mix(in srgb, var(--muted) 14%, transparent); }
+
+            @media (max-width: 640px) {
+                .header-user .user-name { display: none; }
+                .user-dropdown { width: 232px; }
+                .ep-modal { padding: 20px; border-radius: 18px; }
+                .ep-actions { flex-direction: column-reverse; }
+                .ep-grid { grid-template-columns: 1fr; }
+            }
+
+            /* ---------- Theme Switcher ---------- */
+            .theme-fab {
+                position: fixed;
+                bottom: 26px;
+                right: 26px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                z-index: 500;
+                background: conic-gradient(from 180deg, #8b5cf6, #f97316, #06b6d4, #10b981, #f43f5e, #8b5cf6);
+                box-shadow: 0 8px 24px rgba(0,0,0,.3);
+                font-size: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform .25s;
+            }
+
+            .theme-fab:hover { transform: scale(1.08) rotate(15deg); }
+
+            .theme-panel {
+                position: fixed;
+                bottom: 92px;
+                right: 26px;
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 20px 45px rgba(0,0,0,.25);
+                padding: 18px;
+                z-index: 500;
+                display: none;
+                width: 230px;
+            }
+
+            .theme-panel.open { display: block; animation: fade .2s ease; }
+
+            .theme-panel h4 {
+                color: var(--navy);
+                margin-bottom: 12px;
+                font-size: .9rem;
+            }
+
+            .theme-swatches {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+
+            .theme-swatch {
+                width: 100%;
+                aspect-ratio: 1;
+                border-radius: 12px;
+                cursor: pointer;
+                border: 3px solid transparent;
+                transition: .2s;
+                position: relative;
+            }
+
+            .theme-swatch:hover { transform: scale(1.08); }
+            .theme-swatch.active { border-color: var(--navy); }
+
+            .theme-swatch[data-theme="default"] { background: linear-gradient(135deg, #1e293b, #f59e0b); }
+            .theme-swatch[data-theme="royal"] { background: linear-gradient(135deg, #1e1b4b, #8b5cf6); }
+            .theme-swatch[data-theme="sunset"] { background: linear-gradient(135deg, #7c2d12, #f97316); }
+            .theme-swatch[data-theme="ocean"] { background: linear-gradient(135deg, #0c4a6e, #06b6d4); }
+            .theme-swatch[data-theme="emerald"] { background: linear-gradient(135deg, #064e3b, #10b981); }
+            .theme-swatch[data-theme="rose"] { background: linear-gradient(135deg, #881337, #f43f5e); }
+            .theme-swatch[data-theme="midnight"] { background: linear-gradient(135deg, #030712, #38bdf8); }
+            .theme-swatch[data-theme="forest"] { background: linear-gradient(135deg, #14532d, #a3e635); }
+            .theme-swatch[data-theme="graphite"] { background: linear-gradient(135deg, #27272a, #fb923c); }
+
+            /* ---------- Dark / Light Mode ---------- */
+            html[data-mode="dark"] {
+                --bg: #0b1220;
+                --card: #16202f;
+                --border: #2a3648;
+                --text: #e5e9f0;
+                --muted: #94a3b8;
+            }
+
+            html[data-mode="dark"] body { background: var(--bg); color: var(--text); }
+
+            html[data-mode="dark"] .main-nav {
+                background: #101827;
+                box-shadow: 0 4px 14px rgba(0,0,0,.4);
+            }
+
+            html[data-mode="dark"] .tab-btn { background: #1e293b; color: var(--text); }
+            html[data-mode="dark"] .tab-btn.active { background: var(--gold); color: #0b1220; }
+
+            html[data-mode="dark"] .profile-card,
+            html[data-mode="dark"] .stat-card,
+            html[data-mode="dark"] .wizard-card,
+            html[data-mode="dark"] .summary-card,
+            html[data-mode="dark"] .auth-card,
+            html[data-mode="dark"] .modal-content,
+            html[data-mode="dark"] .theme-panel,
+            html[data-mode="dark"] .input-table,
+            html[data-mode="dark"] .landing-card,
+            html[data-mode="dark"] .faq-item {
+                background: var(--card);
+                border-color: var(--border);
+                color: var(--text);
+            }
+
+            html[data-mode="dark"] .auth-card { background: rgba(22,32,47,.97); }
+            html[data-mode="dark"] .detail-row,
+            html[data-mode="dark"] .input-table th,
+            html[data-mode="dark"] .modal-card,
+            html[data-mode="dark"] .faq-question { background: #1e293b; border-color: var(--border); }
+            html[data-mode="dark"] .secondary-btn { background: #334155; color: var(--text); }
+            html[data-mode="dark"] .input-table td,
+            html[data-mode="dark"] .summary-table td,
+            html[data-mode="dark"] .modal-table th,
+            html[data-mode="dark"] .modal-table td,
+            html[data-mode="dark"] .modal-header { border-color: var(--border); }
+            html[data-mode="dark"] .summary-table tr:hover { background: #1e293b; }
+            html[data-mode="dark"] .form-group input,
+            html[data-mode="dark"] .form-group select,
+            html[data-mode="dark"] .input-table input,
+            html[data-mode="dark"] .filter-bar input,
+            html[data-mode="dark"] .filter-bar select {
+                background: #0f172a;
+                color: var(--text);
+                border-color: var(--border);
+            }
+            html[data-mode="dark"] .modal-card { box-shadow: none; }
+            html[data-mode="dark"] .google-btn { background: #1e293b; color: var(--text); border-color: var(--border); }
+            html[data-mode="dark"] ::-webkit-scrollbar-track { background: #1e293b; }
+            html[data-mode="dark"] .landing-nav { background: rgba(11,18,32,.92); }
+            html[data-mode="dark"] .landing-features,
+            html[data-mode="dark"] .landing-faq,
+            html[data-mode="dark"] .landing-contact { background: var(--bg); }
+            html[data-mode="dark"] .screenshot-frame { background: #1e293b; border-color: var(--border); }
+            html[data-mode="dark"] .stat-mini { background: #1e293b; }
+
+            /* ---------- Mode Toggle FAB ---------- */
+            .mode-fab {
+                position: fixed;
+                bottom: 26px;
+                left: 26px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                z-index: 500;
+                background: var(--navy);
+                color: #fff;
+                box-shadow: 0 8px 24px rgba(0,0,0,.3);
+                font-size: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform .25s;
+            }
+            .mode-fab:hover { transform: scale(1.08); }
+
+            /* ---------- Landing Page ---------- */
+            #landingScreen { background: var(--bg); }
+            .landing-nav {
+                position: sticky;
+                top: 0;
+                z-index: 200;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 40px;
+                background: rgba(255,255,255,.92);
+                backdrop-filter: blur(8px);
+                box-shadow: 0 2px 12px rgba(0,0,0,.06);
+            }
+            .landing-nav .logo-wrapper svg { width: 200px; }
+            .landing-nav-links {
+                display: flex;
+                align-items: center;
+                gap: 28px;
+            }
+            .landing-nav-links a {
+                color: var(--text);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: .92rem;
+            }
+            .landing-nav-links a:hover { color: var(--gold-dark); }
+            .landing-nav-cta { display: flex; gap: 10px; }
+            .landing-btn {
+                border: none;
+                border-radius: 12px;
+                padding: 11px 20px;
+                font-weight: 700;
+                font-size: .88rem;
+                cursor: pointer;
+                transition: .25s;
+            }
+            .landing-btn.primary { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #fff; }
+            .landing-btn.ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+            .landing-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.15); }
+
+            .landing-hero {
+                background: linear-gradient(135deg, var(--auth-grad-1), var(--auth-grad-2));
+                background-size: 200% 200%;
+                animation: gradientDrift 14s ease infinite;
+                padding: 90px 40px;
+                text-align: center;
+                color: #fff;
+            }
+            .landing-hero .badge {
+                display: inline-block;
+                background: rgba(255,255,255,.15);
+                border: 1px solid rgba(255,255,255,.3);
+                padding: 7px 16px;
+                border-radius: 30px;
+                font-size: .8rem;
+                font-weight: 600;
+                letter-spacing: .5px;
+                margin-bottom: 22px;
+            }
+            .landing-hero h1 {
+                font-size: 2.6rem;
+                max-width: 780px;
+                margin: 0 auto 18px;
+                line-height: 1.25;
+            }
+            .landing-hero h1 span { color: var(--gold); }
+            .landing-hero p {
+                max-width: 620px;
+                margin: 0 auto 34px;
+                color: #e2e8f0;
+                font-size: 1.05rem;
+                line-height: 1.6;
+            }
+            .landing-hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+            .landing-hero-stats {
+                display: flex;
+                justify-content: center;
+                gap: 50px;
+                margin-top: 55px;
+                flex-wrap: wrap;
+            }
+            .landing-hero-stats .stat-mini h3 { font-size: 1.8rem; color: var(--gold); }
+            .landing-hero-stats .stat-mini p { color: #cbd5e1; font-size: .85rem; margin-top: 4px; }
+
+            .landing-section { padding: 80px 40px; max-width: 1200px; margin: auto; }
+            .landing-section-head { text-align: center; max-width: 640px; margin: 0 auto 50px; }
+            .landing-section-head span.eyebrow {
+                color: var(--gold-dark);
+                font-weight: 700;
+                font-size: .82rem;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+            }
+            .landing-section-head h2 { color: var(--navy); font-size: 2rem; margin: 10px 0 12px; }
+            .landing-section-head p { color: var(--muted); line-height: 1.6; }
+
+            .landing-features { background: #f8fafc; }
+            .landing-features-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+            .landing-card {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                padding: 28px;
+                box-shadow: var(--shadow);
+                transition: .3s;
+            }
+            .landing-card:hover { transform: translateY(-4px); }
+            .landing-card .icon {
+                width: 52px;
+                height: 52px;
+                border-radius: 14px;
+                background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+            .landing-card h3 { color: var(--navy); margin-bottom: 8px; font-size: 1.05rem; }
+            .landing-card p { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+
+            .landing-screenshots-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+            .screenshot-frame {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+            }
+            .screenshot-frame .browser-bar {
+                display: flex;
+                gap: 6px;
+                padding: 10px 14px;
+                background: #e2e8f0;
+            }
+            .screenshot-frame .browser-bar span {
+                width: 10px; height: 10px; border-radius: 50%; background: #94a3b8;
+            }
+            .screenshot-frame .mock-body { padding: 18px; }
+            .screenshot-frame .mock-line { height: 10px; border-radius: 6px; background: #e2e8f0; margin-bottom: 8px; }
+            .screenshot-frame .mock-line.w60 { width: 60%; }
+            .screenshot-frame .mock-line.w80 { width: 80%; }
+            .screenshot-frame .mock-line.gold { background: var(--gold); width: 40%; }
+            .screenshot-frame .mock-block { height: 60px; border-radius: 8px; background: #f1f5f9; margin-top: 10px; }
+            .screenshot-frame figcaption { padding: 14px 18px; font-weight: 700; color: var(--navy); border-top: 1px solid var(--border); text-align: center; font-size: .9rem; }
+
+            .landing-faq { background: #f8fafc; }
+            .faq-item {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                margin-bottom: 12px;
+                overflow: hidden;
+            }
+            .faq-question {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 18px 22px;
+                cursor: pointer;
+                font-weight: 700;
+                color: var(--navy);
+                background: #fff;
+            }
+            .faq-question .chev { transition: transform .25s; color: var(--gold-dark); }
+            .faq-item.open .faq-question .chev { transform: rotate(180deg); }
+            .faq-answer {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height .3s ease;
+                color: var(--muted);
+                font-size: .92rem;
+                line-height: 1.6;
+            }
+            .faq-item.open .faq-answer { max-height: 240px; }
+            .faq-answer-inner { padding: 0 22px 20px; }
+
+            .landing-contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: start;
+            }
+            .landing-contact-info .contact-row {
+                display: flex;
+                gap: 14px;
+                margin-bottom: 22px;
+                align-items: flex-start;
+            }
+            .landing-contact-info .contact-row .icon {
+                width: 42px; height: 42px; border-radius: 12px;
+                background: var(--navy); color: #fff;
+                display: flex; align-items: center; justify-content: center;
+                flex: 0 0 auto;
+            }
+            .landing-contact-info .contact-row h4 { color: var(--navy); font-size: .95rem; margin-bottom: 2px; }
+            .landing-contact-info .contact-row p { color: var(--muted); font-size: .88rem; }
+            .landing-contact-form {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                padding: 28px;
+                box-shadow: var(--shadow);
+            }
+            .landing-contact-form .form-group { margin-bottom: 16px; }
+            .landing-contact-form textarea {
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 14px;
+                font-size: .95rem;
+                outline: none;
+                font-family: inherit;
+                resize: vertical;
+                min-height: 100px;
+            }
+
+            .landing-footer {
+                background: var(--navy);
+                color: #cbd5e1;
+                text-align: center;
+                padding: 26px;
+                font-size: .85rem;
+            }
+
+            @media(max-width: 900px) {
+                .landing-features-grid, .landing-screenshots-grid { grid-template-columns: 1fr; }
+                .landing-contact-grid { grid-template-columns: 1fr; }
+                .landing-nav { padding: 14px 20px; }
+                .landing-nav-links { display: none; }
+                .landing-hero { padding: 60px 20px; }
+                .landing-hero h1 { font-size: 1.9rem; }
+                .landing-section { padding: 55px 20px; }
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                min-height: 100vh;
+                background: var(--bg);
+                color: var(--text);
+                font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+            }
+
+            /* Scrollbar */
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #e2e8f0;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--gold);
+                border-radius: 20px;
+            }
+
+            /* Header */
+            .top-header {
+                background: linear-gradient(135deg, var(--header-grad-1), var(--header-grad-2));
+                border-bottom: 4px solid var(--gold);
+                padding: 14px 24px;
+                transition: background .4s ease;
+            }
+
+            .header-inner {
+                max-width: 1400px;
+                margin: auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            .logo-wrapper {
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+            }
+
+            .logo-wrapper svg {
+                width: 280px;
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            .gov-info {
+                flex: 1;
+                text-align: right;
+            }
+
+            .gov-info h2 {
+                color: #fff;
+                font-size: 1.35rem;
+                margin-bottom: 6px;
+            }
+
+            .gov-info p {
+                color: #cbd5e1;
+                line-height: 1.5;
+                font-size: .95rem;
+            }
+
+            /* Navigation */
+            .main-nav {
+                background: #fff;
+                display: flex;
+                gap: 14px;
+                flex-wrap: wrap;
+                padding: 16px 25px;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .tab-btn {
+                border: none;
+                outline: none;
+                background: #f1f5f9;
+                color: var(--text);
+                padding: 14px 22px;
+                border-radius: 14px;
+                cursor: pointer;
+                font-size: .95rem;
+                font-weight: 600;
+                transition: .3s;
+            }
+
+            .tab-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, .10);
+            }
+
+            .tab-btn.active {
+                background: var(--gold);
+                color: #fff;
+            }
+
+            /* Main Container */
+            .app-container {
+                max-width: 1400px;
+                margin: auto;
+                padding: 30px;
+            }
+
+            /* Pages */
+            .page {
+                display: none;
+                animation: fade .25s ease;
+            }
+
+            .active-page {
+                display: block;
+            }
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .dashboard-grid {
+                display: grid;
+                gap: 25px;
+            }
+
+            .profile-card {
+                background: #fff;
+                border-radius: 20px;
+                padding: 30px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .profile-header {
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                margin-bottom: 30px;
+            }
+
+            .profile-icon {
+                width: 65px;
+                height: 65px;
+                border-radius: 50%;
+                background: #f59e0b;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 30px;
+            }
+
+            .profile-header h2 {
+                color: var(--navy);
+                margin-bottom: 4px;
+            }
+
+            .profile-header p {
+                color: var(--muted);
+            }
+
+            .profile-table {
+                display: grid;
+                gap: 14px;
+            }
+
+            .detail-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 16px;
+                background: #f8fafc;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .detail-row span {
+                color: var(--muted);
+            }
+
+            .detail-row strong {
+                color: var(--navy);
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+
+            .stat-card {
+                background: #fff;
+                padding: 28px;
+                text-align: center;
+                border-radius: 20px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+                transition: .3s;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-4px);
+            }
+
+            .stat-icon {
+                font-size: 32px;
+                margin-bottom: 12px;
+            }
+
+            .stat-card h3 {
+                color: var(--gold);
+                font-size: 2rem;
+                margin-bottom: 8px;
+            }
+
+            .stat-card p {
+                color: var(--muted);
+            }
+
+            /* Wizard */
+            .wizard-card {
+                background: #fff;
+                border-radius: 20px;
+                padding: 35px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .wizard-header {
+                margin-bottom: 30px;
+            }
+
+            .wizard-header h2 {
+                color: var(--navy);
+                margin-bottom: 8px;
+            }
+
+            .wizard-header p {
+                color: var(--muted);
+            }
+
+            .progress-wrapper {
+                margin-bottom: 35px;
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 10px;
+                background: #e2e8f0;
+                border-radius: 50px;
+                overflow: hidden;
+            }
+
+            .progress-fill {
+                width: 25%;
+                height: 100%;
+                background: var(--gold);
+                transition: .35s;
+            }
+
+            .step-indicators {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 18px;
+            }
+
+            .step-dot {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                background: #e2e8f0;
+                color: #64748b;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                transition: .3s;
+            }
+
+            .step-dot.active {
+                background: var(--gold);
+                color: #fff;
+            }
+
+            .wizard-step {
+                display: none;
+                animation: fade .25s ease;
+                min-height: 250px;
+            }
+
+            .active-step {
+                display: block;
+            }
+
+            .wizard-step h3 {
+                margin-bottom: 15px;
+                color: var(--navy);
+            }
+
+            .wizard-actions {
+                margin-top: 35px;
+                display: flex;
+                justify-content: space-between;
+                gap: 15px;
+            }
+
+            .wizard-btn {
+                border: none;
+                border-radius: 12px;
+                padding: 14px 24px;
+                cursor: pointer;
+                font-weight: 700;
+                transition: .3s;
+            }
+
+            .primary-btn {
+                background: var(--gold);
+                color: #fff;
+            }
+
+            .secondary-btn {
+                background: #e2e8f0;
+            }
+
+            .wizard-btn:hover {
+                transform: translateY(-2px);
+            }
+
+            /* Input Form Tables CSS */
+            .input-table-wrapper {
+                width: 100%;
+                overflow-x: auto;
+                margin: 15px 0 25px 0;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+            }
+
+            .input-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: #fff;
+            }
+
+            .input-table th {
+                background: #f1f5f9;
+                color: var(--navy);
+                font-weight: 600;
+                padding: 12px;
+                text-align: left;
+                border-bottom: 2px solid var(--border);
+                font-size: 0.9rem;
+            }
+
+            .input-table td {
+                padding: 10px 12px;
+                border-bottom: 1px solid #e2e8f0;
+                vertical-align: middle;
+            }
+
+            .input-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .input-table input {
+                width: 100%;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 10px;
+                font-size: .95rem;
+                outline: none;
+                transition: .2s;
+            }
+
+            .input-table input:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, .15);
+            }
+
+            /* Forms Layout */
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .form-group label {
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: var(--navy);
+            }
+
+            .form-group input,
+            .form-group select {
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 14px;
+                font-size: .95rem;
+                outline: none;
+                transition: .3s;
+            }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, .15);
+            }
+
+            .hidden-field {
+                display: none;
+                animation: fade .25s ease;
+            }
+
+            .save-option-btn {
+                width: 100%;
+                border: none;
+                border-radius: 14px;
+                background: var(--gold);
+                color: #fff;
+                padding: 18px;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: .3s;
+            }
+
+            .save-option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(245, 158, 11, .35);
+            }
+
+            /* Summary */
+            .summary-card {
+                background: #fff;
+                padding: 30px;
+                border-radius: 20px;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow);
+            }
+
+            .summary-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 25px;
+            }
+
+            .summary-buttons {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .summary-btn {
+                border: none;
+                border-radius: 12px;
+                padding: 12px 18px;
+                background: var(--gold);
+                color: #fff;
+                cursor: pointer;
+                font-weight: 700;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            .summary-table {
+                width: 100%;
+                border-collapse: collapse;
+                min-width: 1100px;
+            }
+
+            .summary-table th {
+                background: var(--navy);
+                color: #fff;
+                padding: 15px;
+                text-align: left;
+            }
+
+            .summary-table td {
+                padding: 15px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .summary-table tr:hover {
+                background: #f8fafc;
+            }
+
+            .college-link {
+                color: #2563eb;
+                cursor: pointer;
+                font-weight: 600;
+            }
+
+            .action-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+                min-width: 270px;
+            }
+
+            .action-grid button {
+                border: none;
+                border-radius: 8px;
+                padding: 8px;
+                cursor: pointer;
+                font-size: 12px;
+                color: #fff;
+                font-weight: 600;
+            }
+
+            .btn-edit {
+                background: #3b82f6;
+            }
+
+            .btn-up,
+            .btn-down {
+                background: #64748b;
+            }
+
+            .btn-pdf {
+                background: #f59e0b;
+            }
+
+            .btn-delete {
+                background: #ef4444;
+            }
+
+            .btn-view {
+                background: #10b981;
+            }
+
+            .link-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                min-width: 100px;
+            }
+
+            .link-actions a {
+                border: none;
+                border-radius: 8px;
+                padding: 7px 10px;
+                cursor: pointer;
+                font-size: 12px;
+                color: #fff;
+                font-weight: 600;
+                text-align: center;
+                text-decoration: none;
+                transition: transform .15s ease, box-shadow .15s ease;
+            }
+
+            .link-actions a:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 10px rgba(0,0,0,.15);
+            }
+
+            .link-actions a.map-link { background: #0ea5e9; }
+            .link-actions a.site-link { background: #10b981; }
+
+            /* Premium Professional Modal Layout Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 23, 42, .75);
+                z-index: 999;
+                overflow: auto;
+                padding: 40px 20px;
+                backdrop-filter: blur(6px);
+            }
+
+            .modal-content {
+                max-width: 1000px;
+                margin: auto;
+                background: #fff;
+                border-radius: 24px;
+                padding: 35px;
+                animation: fade .35s ease-out;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 25px;
+                border-bottom: 2px solid #e2e8f0;
+                padding-bottom: 18px;
+            }
+
+            .modal-header h2 {
+                color: var(--navy);
+                font-size: 1.5rem;
+                font-weight: 800;
+            }
+
+            .modal-close {
+                border: none;
+                background: #ef4444;
+                color: #fff;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: .2s;
+            }
+
+            .modal-close:hover {
+                transform: scale(1.1);
+                background: #dc2626;
+            }
+
+            .modal-dashboard-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+
+            .modal-card {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 16px;
+                padding: 22px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            }
+
+            .modal-card.full-width {
+                grid-column: span 2;
+            }
+
+            .modal-card h3 {
+                margin-bottom: 15px;
+                color: var(--navy);
+                font-size: 1.1rem;
+                font-weight: 700;
+                border-left: 4px solid var(--gold);
+                padding-left: 10px;
+            }
+
+            .modal-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .modal-table th,
+            .modal-table td {
+                padding: 12px 14px;
+                text-align: left;
+                font-size: 0.92rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .modal-table tr:last-child th,
+            .modal-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .modal-table th {
+                background: transparent;
+                color: var(--muted);
+                font-weight: 600;
+                width: 35%;
+            }
+
+            .modal-table td {
+                color: var(--navy);
+                font-weight: 700;
+            }
+
+            .modal-badge {
+                background: linear-gradient(135deg, var(--navy-light), var(--navy));
+                color: #fff;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 0.8rem;
+                letter-spacing: 0.5px;
+            }
+
+            .modal-badge.gold {
+                background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            }
+
+            /* Responsive Media Queries */
+            @media(max-width:900px) {
+                .header-inner {
+                    flex-direction: column;
+                    gap: 14px;
+                    text-align: center;
+                }
+
+                .gov-info {
+                    text-align: center;
+                }
+
+                .stats-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .modal-dashboard-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .modal-card.full-width {
+                    grid-column: span 1;
+                }
+            }
+
+            @media(max-width:768px) {
+                .logo-wrapper svg {
+                    width: 220px;
+                }
+
+                .main-nav {
+                    flex-direction: column;
+                }
+
+                .tab-btn {
+                    width: 100%;
+                }
+
+                .app-container {
+                    padding: 18px;
+                }
+
+                .gov-info h2 {
+                    font-size: 1.1rem;
+                }
+
+                .gov-info p {
+                    font-size: .85rem;
+                }
+
+                .detail-row {
+                    flex-direction: column;
+                    gap: 8px;
+                    text-align: center;
+                }
+
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+/* ========================================================================
+   MODERN OVERHAUL LAYER — appended last so it overrides prior rules.
+   Typography: Outfit (display) + Plus Jakarta Sans (body).
+   Palette: indigo/violet + warm amber accent, soft neutral surfaces,
+            glassmorphism, refined shadows, tactile focus states.
+   ======================================================================== */
+:root{
+    --mh-bg: #f5f6fb;
+    --mh-surface: rgba(255,255,255,0.78);
+    --mh-surface-solid: #ffffff;
+    --mh-ink: #0b1220;
+    --mh-ink-soft: #475069;
+    --mh-line: rgba(15,23,42,0.08);
+    --mh-primary: #4f46e5;
+    --mh-primary-2: #7c3aed;
+    --mh-accent: #f59e0b;
+    --mh-accent-2: #ef4444;
+    --mh-grad: linear-gradient(135deg,#4f46e5 0%,#7c3aed 55%,#ec4899 100%);
+    --mh-grad-soft: linear-gradient(135deg,#eef2ff 0%,#faf5ff 55%,#fef3c7 100%);
+    --mh-shadow-sm: 0 1px 2px rgba(15,23,42,.05),0 2px 6px rgba(15,23,42,.05);
+    --mh-shadow-md: 0 10px 25px -12px rgba(79,70,229,.35),0 4px 10px rgba(15,23,42,.06);
+    --mh-shadow-lg: 0 24px 60px -20px rgba(79,70,229,.45),0 8px 20px rgba(15,23,42,.08);
+    --mh-radius: 18px;
+}
+html, body{
+    font-family: 'Plus Jakarta Sans','Inter',system-ui,-apple-system,sans-serif !important;
+    letter-spacing: -0.005em;
+    color: var(--mh-ink);
+}
+body{ background:
+    radial-gradient(1200px 600px at -10% -20%, rgba(124,58,237,.10), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(245,158,11,.10), transparent 55%),
+    var(--mh-bg) !important;
+}
+h1,h2,h3,h4,.gov-info h2,.landing-hero h1{
+    font-family:'Outfit','Plus Jakarta Sans',sans-serif !important;
+    letter-spacing:-0.02em;
+    font-weight:800;
+}
+
+/* Header refresh */
+.top-header{
+    background: linear-gradient(120deg,#0b1220 0%,#1e1b4b 45%,#4c1d95 100%) !important;
+    border-bottom: none !important;
+    box-shadow: 0 12px 40px -18px rgba(30,27,75,.6);
+    position: relative;
+}
+.top-header::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+    background: var(--mh-grad);
+}
+.gov-info h2{ color:#fff; }
+.gov-info p{ color:#c7d2fe; }
+.header-user .user-name{ color:#e0e7ff; }
+.logout-btn{ border-color:rgba(255,255,255,.25); background:rgba(255,255,255,.06); backdrop-filter:blur(8px); }
+.logout-btn:hover{ background:rgba(255,255,255,.16); }
+
+/* Nav tabs */
+.main-nav{
+    background: var(--mh-surface) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--mh-line);
+    box-shadow: var(--mh-shadow-sm);
+}
+.tab-btn{
+    border-radius: 999px !important;
+    font-weight: 600;
+    transition: all .25s ease;
+    border: 1px solid transparent;
+}
+.tab-btn:hover{ transform: translateY(-1px); border-color: var(--mh-line); }
+.tab-btn.active{
+    background: var(--mh-grad) !important;
+    color:#fff !important;
+    box-shadow: var(--mh-shadow-md);
+}
+
+/* Cards / surfaces */
+.profile-card,.stat-card,.wizard-card,.summary-card,.auth-card,.modal-content,
+.landing-card,.faq-item,.input-table,.theme-panel{
+    background: var(--mh-surface) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--mh-line) !important;
+    border-radius: var(--mh-radius) !important;
+    box-shadow: var(--mh-shadow-md) !important;
+}
+.stat-card, .landing-card, .faq-item{
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.stat-card:hover, .landing-card:hover, .faq-item:hover{
+    transform: translateY(-4px);
+    box-shadow: var(--mh-shadow-lg) !important;
+    border-color: rgba(79,70,229,.3) !important;
+}
+
+/* Auth screens */
+.auth-screen{
+    background:
+        radial-gradient(800px 500px at 15% 15%, rgba(124,58,237,.55), transparent 60%),
+        radial-gradient(700px 500px at 85% 85%, rgba(236,72,153,.45), transparent 55%),
+        linear-gradient(135deg,#0b1220,#1e1b4b) !important;
+    animation: none !important;
+}
+.auth-card{ background: rgba(255,255,255,.92) !important; border-radius: 24px !important; }
+
+/* Buttons */
+.onboard-submit-btn, .primary-btn, .form-actions .next-btn, .form-actions .submit-btn,
+button.primary, .cta-btn, .landing-cta{
+    background: var(--mh-grad) !important;
+    color:#fff !important;
+    border:none !important;
+    border-radius: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing:.01em;
+    box-shadow: var(--mh-shadow-md);
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.onboard-submit-btn:hover,.primary-btn:hover,.form-actions .next-btn:hover,
+.form-actions .submit-btn:hover,button.primary:hover,.cta-btn:hover,.landing-cta:hover{
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: var(--mh-shadow-lg);
+}
+.secondary-btn{
+    background:#fff !important;
+    color:var(--mh-primary) !important;
+    border:1px solid rgba(79,70,229,.25) !important;
+    border-radius: 14px !important;
+    font-weight:600 !important;
+    transition: all .2s ease;
+}
+.secondary-btn:hover{ background:#eef2ff !important; }
+
+/* Inputs */
+.form-group label{
+    font-weight:600 !important;
+    color: var(--mh-ink-soft) !important;
+    font-size:.82rem !important;
+    text-transform: uppercase;
+    letter-spacing:.06em;
+}
+.form-group input, .form-group select, .input-table input,
+.filter-bar input, .filter-bar select, textarea{
+    border-radius: 12px !important;
+    border: 1.5px solid var(--mh-line) !important;
+    padding: 12px 14px !important;
+    font-family: inherit !important;
+    font-size: .95rem !important;
+    background: #fff !important;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.form-group input:focus, .form-group select:focus, .input-table input:focus,
+.filter-bar input:focus, .filter-bar select:focus, textarea:focus{
+    outline: none !important;
+    border-color: var(--mh-primary) !important;
+    box-shadow: 0 0 0 4px rgba(79,70,229,.15) !important;
+}
+#choiceCode, #tfwsCode{
+    font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+    letter-spacing: .12em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Summary table */
+.summary-table{ border-radius: 14px; overflow:hidden; }
+.summary-table th{
+    background: linear-gradient(135deg,#111827,#312e81) !important;
+    color:#fff !important;
+    text-transform: uppercase;
+    letter-spacing:.08em;
+    font-size:.78rem !important;
+}
+.summary-table tr:hover{ background:#eef2ff !important; }
+
+/* Landing hero */
+.landing-hero{
+    background:
+        radial-gradient(700px 400px at 20% 10%, rgba(124,58,237,.35), transparent 60%),
+        radial-gradient(600px 400px at 80% 90%, rgba(245,158,11,.25), transparent 55%),
+        linear-gradient(135deg,#0b1220,#1e1b4b) !important;
+    color:#fff !important;
+}
+.landing-hero h1{ color:#fff !important; }
+.landing-hero p{ color:#c7d2fe !important; }
+
+/* Chips / badges */
+.badge, .chip, .status-chip{
+    background: var(--mh-grad-soft) !important;
+    color: var(--mh-primary) !important;
+    border: 1px solid rgba(79,70,229,.15) !important;
+    border-radius: 999px !important;
+    padding: 4px 12px !important;
+    font-weight: 600;
+    font-size:.75rem;
+    letter-spacing:.04em;
+}
+
+/* Section transitions */
+.page{
+    animation: mhFade .35s ease both;
+}
+@keyframes mhFade{
+    from{ opacity:0; transform: translateY(8px); }
+    to{ opacity:1; transform: none; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-thumb{
+    background: var(--mh-grad) !important;
+    border-radius: 20px !important;
+}
+
+/* Dark mode retune */
+html[data-mode="dark"]{
+    --mh-bg:#070915;
+    --mh-surface: rgba(22,28,45,.75);
+    --mh-surface-solid:#141a2e;
+    --mh-ink:#e6eaf5;
+    --mh-ink-soft:#a5adc4;
+    --mh-line: rgba(148,163,184,.14);
+}
+html[data-mode="dark"] body{
+    background:
+        radial-gradient(1200px 600px at -10% -20%, rgba(124,58,237,.22), transparent 60%),
+        radial-gradient(900px 500px at 110% 10%, rgba(245,158,11,.15), transparent 55%),
+        var(--mh-bg) !important;
+    color: var(--mh-ink) !important;
+}
+html[data-mode="dark"] .form-group input,
+html[data-mode="dark"] .form-group select,
+html[data-mode="dark"] .input-table input{
+    background:#0f1424 !important;
+    color: var(--mh-ink) !important;
+}
+html[data-mode="dark"] .secondary-btn{
+    background:#1a2036 !important; color:#c7d2fe !important;
+    border-color: rgba(148,163,184,.18) !important;
+}
+
+
+/* ===== Preference List: Drag & Jump ===== */
+.summary-table tbody tr { transition: background .15s ease, transform .15s ease, box-shadow .15s ease; }
+.summary-table tbody tr.dragging {
+    opacity: .85;
+    background: color-mix(in srgb, var(--gold) 12%, var(--card));
+    box-shadow: 0 12px 30px rgba(15,23,42,.25);
+    transform: scale(1.005);
+}
+.summary-table tbody tr.drag-over-top    { box-shadow: inset 0 3px 0 0 var(--gold); }
+.summary-table tbody tr.drag-over-bottom { box-shadow: inset 0 -3px 0 0 var(--gold); }
+.drag-handle {
+    cursor: grab; user-select: none; touch-action: none;
+    font-size: 18px; color: var(--muted);
+    padding: 6px 8px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+}
+.drag-handle:hover  { background: color-mix(in srgb, var(--gold) 15%, transparent); color: var(--navy); }
+.drag-handle:active { cursor: grabbing; }
+.pref-cell { display: flex; align-items: center; gap: 8px; }
+.pref-input {
+    width: 58px; padding: 6px 8px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-weight: 700; font-size: 14px; text-align: center;
+    background: var(--card); color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+}
+.pref-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 25%, transparent); }
+#prefToast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--navy); color: #fff; padding: 10px 18px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
+    z-index: 9999;
+}
+#prefToast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (max-width: 640px) {
+    .drag-handle { font-size: 22px; padding: 10px; }
+    .pref-input { width: 52px; }
+}
+        </style>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    </head>
+    <body>
+        <!-- ===================== LANDING PAGE ===================== -->
+        <div id="landingScreen">
+            <nav class="landing-nav">
+                <div class="logo-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
+                        <defs>
+                            <linearGradient id="lgGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b" />
+                                <stop offset="100%" stop-color="#b45309" />
+                            </linearGradient>
+                        </defs>
+                        <g transform="translate(10,10)">
+                            <path d="M 15 75 L 15 45 L 35 60 L 55 45 L 55 75" fill="none" stroke="#1e293b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <polygon points="35,15 65,30 35,45 5,30" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+                            <path d="M 35 30 L 55 38 L 55 52" fill="none" stroke="url(#lgGold)" stroke-width="2.5" stroke-linecap="round" />
+                            <circle cx="55" cy="54" r="3.5" fill="url(#lgGold)" />
+                            <path d="M 35 60 L 55 45 L 70 25" fill="none" stroke="url(#lgGold)" stroke-width="6" stroke-linecap="round" />
+                            <polyline points="58,23 72,23 72,37" fill="none" stroke="url(#lgGold)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </g>
+                        <text x="105" y="58" font-family="'Segoe UI',Arial,sans-serif" font-size="38" font-weight="800" fill="#1e293b"> Maha <tspan fill="url(#lgGold)">Cap</tspan></text>
+                        <text x="107" y="78" font-family="'Segoe UI',Arial,sans-serif" font-size="12" font-weight="500" fill="#64748b" letter-spacing="3"> CAP PRACTICE PORTAL </text>
+                    </svg>
+                </div>
+                <div class="landing-nav-links">
+                    <a href="#landing-features">Features</a>
+                    <a href="#landing-screenshots">Screenshots</a>
+                    <a href="#landing-faq">FAQ</a>
+                    <a href="#landing-contact">Contact</a>
+                </div>
+                <div class="landing-nav-cta">
+                    <button class="landing-btn ghost" id="landingLoginBtn">Sign In</button>
+                    <button class="landing-btn primary" id="landingGetStartedBtn">Get Started</button>
+                </div>
+            </nav>
+
+            <!-- Hero -->
+            <header class="landing-hero">
+                <span class="badge">🎓 MHT-CET CAP Practice Portal &middot; AY 2026-27</span>
+                <h1>Practice your CAP option form <span>before it counts</span></h1>
+                <p>MahaCap lets Maharashtra CET candidates build, reorder, and export their CAP option list in a risk-free practice environment — so the real submission day feels routine, not stressful.</p>
+                <div class="landing-hero-ctas">
+                    <button class="landing-btn primary" id="heroGetStartedBtn" style="padding:15px 26px; font-size:1rem;">Start Practicing Free</button>
+                    <button class="landing-btn ghost" style="padding:15px 26px; font-size:1rem; border-color:rgba(255,255,255,.4); color:#fff;" onclick="document.getElementById('landing-features').scrollIntoView({behavior:'smooth'})">See Features</button>
+                </div>
+                <div class="landing-hero-stats">
+                    <div class="stat-mini"><h3>7</h3><p>Color Themes</p></div>
+                    <div class="stat-mini"><h3>100%</h3><p>Free to Use</p></div>
+                    <div class="stat-mini"><h3>Cloud</h3><p>Synced Data</p></div>
+                </div>
+            </header>
+
+            <!-- Features -->
+            <section class="landing-section landing-features" id="landing-features">
+                <div class="landing-section-head">
+                    <span class="eyebrow">Why MahaCap</span>
+                    <h2>Everything you need to prepare</h2>
+                    <p>Purpose-built for the MHT-CET CAP round, from first draft to final download.</p>
+                </div>
+                <div class="landing-features-grid">
+                    <div class="landing-card"><div class="icon">✍️</div><h3>Guided Option Form Wizard</h3><p>Step-by-step form filling for every college, branch, and quota field — just like the real CAP portal.</p></div>
+                    <div class="landing-card"><div class="icon">📋</div><h3>Drag-Free Reordering</h3><p>Move preferences up or down instantly to fine-tune your priority order before you commit.</p></div>
+                    <div class="landing-card"><div class="icon">📊</div><h3>Live Analytics</h3><p>See total colleges added and your most-selected branches at a glance on your dashboard.</p></div>
+                    <div class="landing-card"><div class="icon">📥</div><h3>Branded PDF Reports</h3><p>Export a polished, professionally branded PDF of your full option list or any single college.</p></div>
+                    <div class="landing-card"><div class="icon">☁️</div><h3>Cloud Sync</h3><p>Sign in with Google or email — your option list is saved securely and available on any device.</p></div>
+                    <div class="landing-card"><div class="icon">🎨</div><h3>Personalized Themes</h3><p>Switch between 7 color themes and light/dark mode to match how you like to work.</p></div>
+                </div>
+            </section>
+
+            <!-- Screenshots -->
+            <section class="landing-section" id="landing-screenshots">
+                <div class="landing-section-head">
+                    <span class="eyebrow">A closer look</span>
+                    <h2>See MahaCap in action</h2>
+                    <p>A quick look at the dashboard, the form wizard, and your option summary.</p>
+                </div>
+                <div class="landing-screenshots-grid">
+                    <figure class="screenshot-frame">
+                        <div class="browser-bar"><span></span><span></span><span></span></div>
+                        <div class="mock-body">
+                            <div class="mock-line gold"></div>
+                            <div class="mock-line w80"></div>
+                            <div class="mock-line w60"></div>
+                            <div class="mock-block"></div>
+                        </div>
+                        <figcaption>Candidate Dashboard</figcaption>
+                    </figure>
+                    <figure class="screenshot-frame">
+                        <div class="browser-bar"><span></span><span></span><span></span></div>
+                        <div class="mock-body">
+                            <div class="mock-line gold"></div>
+                            <div class="mock-line w60"></div>
+                            <div class="mock-line w80"></div>
+                            <div class="mock-block"></div>
+                        </div>
+                        <figcaption>Option Form Wizard</figcaption>
+                    </figure>
+                    <figure class="screenshot-frame">
+                        <div class="browser-bar"><span></span><span></span><span></span></div>
+                        <div class="mock-body">
+                            <div class="mock-line gold"></div>
+                            <div class="mock-line w80"></div>
+                            <div class="mock-line w60"></div>
+                            <div class="mock-block"></div>
+                        </div>
+                        <figcaption>Option Form Summary</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="landing-section landing-faq" id="landing-faq">
+                <div class="landing-section-head">
+                    <span class="eyebrow">Questions</span>
+                    <h2>Frequently asked questions</h2>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">Is MahaCap an official CAP portal? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">No. MahaCap is an independent practice tool to help candidates rehearse filling their option form. Always submit your real preferences on the official CAP portal.</div></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Is it free to use? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">Yes, MahaCap is completely free for students to practice their option form.</div></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Will my data be saved if I come back later? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">Yes. Once you sign in, your profile and option list are saved to your account and sync whenever you log back in.</div></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I download my option list? <span class="chev">▾</span></div>
+                        <div class="faq-answer"><div class="faq-answer-inner">Yes — you can export a branded PDF of your full list, a combined detail report, or a CSV file from the Summary page.</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section class="landing-section landing-contact" id="landing-contact">
+                <div class="landing-section-head">
+                    <span class="eyebrow">Get in touch</span>
+                    <h2>Have a question or feedback?</h2>
+                </div>
+                <div class="landing-contact-grid">
+                    <div class="landing-contact-info">
+                        <div class="contact-row"><div class="icon">✉️</div><div><h4>Email</h4><p>support@mahacap.app</p></div></div>
+                        <div class="contact-row"><div class="icon">📍</div><div><h4>Based in</h4><p>Maharashtra, India</p></div></div>
+                        <div class="contact-row"><div class="icon">💬</div><div><h4>Response time</h4><p>We typically reply within 1-2 business days</p></div></div>
+                    </div>
+                    <form class="landing-contact-form" id="landingContactForm">
+                        <div class="form-group"><label>Your Name</label><input type="text" id="contactName" required placeholder="Full name"></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="contactEmail" required placeholder="you@example.com"></div>
+                        <div class="form-group"><label>Message</label><textarea id="contactMessage" required placeholder="How can we help?"></textarea></div>
+                        <button type="submit" class="landing-btn primary" style="width:100%; padding:14px;">Send Message</button>
+                    </form>
+                </div>
+            </section>
+
+            <footer class="landing-footer">
+                &copy; 2026 MahaCap &middot; Unofficial MHT-CET CAP Practice Portal &middot; Not affiliated with the State Common Entrance Test Cell
+            </footer>
+        </div>
+
+        <!-- ===================== LOGIN SCREEN ===================== -->
+        <div id="loginScreen" class="auth-screen" style="display:none;">
+            <div class="auth-card">
+                <h1>Welcome to MahaCap</h1>
+                <p class="auth-sub" id="authSubText">Sign in to start filling your MHT-CET CAP option form.</p>
+                <button id="googleSignInBtn" class="google-btn">
+                    <svg width="20" height="20" viewBox="0 0 48 48">
+                        <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/>
+                        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
+                        <path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.3 35.3 26.8 36 24 36c-5.3 0-9.6-3.4-11.2-8.1l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/>
+                        <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.3 5.3C40.9 36.5 44 30.9 44 24c0-1.3-.1-2.7-.4-3.5z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+
+                <div class="auth-divider"><span>or</span></div>
+
+                <form id="emailAuthForm">
+                    <div class="form-group" style="margin-bottom:14px;">
+                        <label>Email Address</label>
+                        <input type="email" id="authEmail" required placeholder="you@example.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom:6px;">
+                        <label>Password</label>
+                        <input type="password" id="authPassword" required placeholder="At least 6 characters" minlength="6">
+                    </div>
+                    <p id="authError" class="auth-error"></p>
+                    <button type="submit" id="emailAuthSubmitBtn" class="onboard-submit-btn" style="margin-top:14px;">Sign In</button>
+                </form>
+
+                <p class="auth-toggle-line">
+                    <span id="authToggleLabel">Don't have an account?</span>
+                    <a href="#" id="authToggleLink">Create one</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- ===================== ONBOARDING / CREATE PROFILE SCREEN ===================== -->
+        <div id="onboardingScreen" class="auth-screen" style="display:none;">
+            <div class="auth-card onboarding-card">
+                <h1>Create Your Profile</h1>
+                <p class="auth-sub">Tell us a little about yourself before you start filling your option form.</p>
+                <form id="onboardingForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Candidate Name</label>
+                            <input type="text" id="ob_name" required placeholder="Your full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Application ID</label>
+                            <input type="text" id="ob_appId" required placeholder="e.g. EN26109988">
+                        </div>
+                        <div class="form-group">
+                            <label>General State Merit Rank</label>
+                            <input type="number" id="ob_rank" required placeholder="e.g. 4215">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="ob_category" required>
+                                <option value="">-- Select Category --</option>
+                                <option>Open/General</option>
+                                <option>SC</option>
+                                <option>ST</option>
+                                <option>VJ/NT</option>
+                                <option>NT1</option>
+                                <option>NT2</option>
+                                <option>NT3</option>
+                                <option>OBC</option>
+                                <option>SEBC</option>
+                                <option>EWS</option>
+                                <option>PWD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="onboard-submit-btn">Create Profile & Continue</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===================== MAIN APP SHELL ===================== -->
+        <div id="appShell" style="display:none;">
+        <header class="top-header">
+            <div class="header-inner">
+                <div class="logo-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
+                        <defs>
+                            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b" />
+                                <stop offset="100%" stop-color="#b45309" />
+                            </linearGradient>
+                            <linearGradient id="navyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffffff" />
+                                <stop offset="100%" stop-color="#ffffff" />
+                            </linearGradient>
+                            <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+                                <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.4" flood-color="#000000" />
+                            </filter>
+                        </defs>
+                        <g transform="translate(10,10)" filter="url(#dropShadow)">
+                            <path d="M 15 75 L 15 45 L 35 60 L 55 45 L 55 75" fill="none" stroke="url(#navyGradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <polygon points="35,15 65,30 35,45 5,30" fill="url(#navyGradient)" stroke="#f59e0b" stroke-width="2" />
+                            <path d="M 35 30 L 55 38 L 55 52" fill="none" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round" />
+                            <circle cx="55" cy="54" r="3.5" fill="url(#goldGradient)" />
+                            <path d="M 35 60 L 55 45 L 70 25" fill="none" stroke="url(#goldGradient)" stroke-width="6" stroke-linecap="round" />
+                            <polyline points="58,23 72,23 72,37" fill="none" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </g>
+                        <text x="105" y="58" font-family="'Segoe UI',Arial,sans-serif" font-size="38" font-weight="800" fill="#ffffff"> Maha <tspan fill="url(#goldGradient)">Cap</tspan>
+                        </text>
+                        <text x="107" y="78" font-family="'Segoe UI',Arial,sans-serif" font-size="12" font-weight="500" fill="#94a3b8" letter-spacing="3"> CAP PRACTICE PORTAL </text>
+                    </svg>
+                </div>
+                <div class="gov-info">
+                    <h2>State Common Entrance Test Cell, Maharashtra State</h2>
+                    <p>MHT-CET CAP Option Form Practice Portal <br>Academic Year 2026-27 </p>
+                </div>
+                <div class="header-user">
+                    <span id="userNameLabel" class="user-name"></span>
+                    <div class="user-menu-wrap">
+                        <button id="avatarBtn" class="avatar-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Account menu">
+                            <img id="userAvatar" src="" alt="Profile photo" style="display:none;">
+                            <span id="userInitials" class="avatar-initials">👤</span>
+                        </button>
+                        <div id="userMenu" class="user-dropdown" role="menu">
+                            <div class="user-dropdown-head">
+                                <img id="menuAvatar" src="" alt="" style="display:none;">
+                                <span id="menuInitials" class="avatar-initials sm">👤</span>
+                                <div class="user-dropdown-id">
+                                    <strong id="menuUserName">Candidate</strong>
+                                    <span id="menuUserEmail"></span>
+                                </div>
+                            </div>
+                            <button id="editProfileMenuBtn" class="user-dropdown-item" type="button" role="menuitem">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                Edit Profile
+                            </button>
+                            <button id="logoutBtn" class="user-dropdown-item danger" type="button" role="menuitem">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <nav class="main-nav">
+            <button class="tab-btn active" data-tab="dashboard">🖥️ Candidate Dashboard</button>
+            <button class="tab-btn" data-tab="form">✍️ Option Form Filling</button>
+            <button class="tab-btn" data-tab="summary">📋 Option Form Summary</button>
+        </nav>
+        <main class="app-container">
+            <section id="dashboard" class="page active-page">
+                <div class="dashboard-grid">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-icon">👤</div>
+                            <div>
+                                <h2>Candidate Profile</h2>
+                                <p>MHT-CET CAP Practice Portal</p>
+                            </div>
+                        </div>
+                        <div class="profile-table">
+                            <div class="detail-row">
+                                <span>Candidate Name</span>
+                                <strong id="candidateName">--</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Application ID</span>
+                                <strong id="candidateAppId">--</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>General State Merit Rank</span>
+                                <strong id="candidateRank">--</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Category</span>
+                                <strong id="candidateCategory">--</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📋</div>
+                            <h3 id="totalPreferences">0</h3>
+                            <p>Total Preferences</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🕒</div>
+                            <h3 id="lastModified">--</h3>
+                            <p>Last Modified</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <h3 id="completionStatus">0%</h3>
+                            <p>Completion Status</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🏛️</div>
+                            <h3 id="totalBranches">0</h3>
+                            <p>Total Branches Added</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="form" class="page">
+                <div class="wizard-card">
+                    <div class="wizard-header">
+                        <h2>MHT-CET CAP Option Form Filling</h2>
+                        <p>Add your college preferences step by step.</p>
+                    </div>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                        <div class="step-indicators">
+                            <div class="step-dot active">1</div>
+                            <div class="step-dot">2</div>
+                            <div class="step-dot">3</div>
+                        </div>
+                    </div>
+                    <div id="step1" class="wizard-step active-step">
+                        <h3>Step 1 – College / Institute Information</h3>
+                        <div class="form-group" style="margin-bottom: 25px; padding: 15px; background: #f0fdf4; border: 1px dashed #16a34a; border-radius: 12px;">
+                            <label style="color: #16a34a; font-weight: 700; display: flex; align-items: center; gap: 6px;"> 📋 Duplicate Details from a Previously Added College </label>
+                            <select id="cloneCollegeSelect" style="margin-top: 8px; border-color: #bbf7d0;">
+                                <option value="">-- Select a College to Autofill Institute Details --</option>
+                            </select>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Institute Code</label>
+                                <input type="text" id="instituteCode" maxlength="10" placeholder="e.g. 01002">
+                            </div>
+                            <div class="form-group">
+                                <label>Institute Name</label>
+                                <input type="text" id="collegeName" placeholder="e.g. Government College of Engineering, Amravati">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Institute Address</label>
+                                <input type="text" id="instituteAddress" placeholder="e.g. VMV Road, Near Kathora Naka, Amravati">
+                            </div>
+                            <div class="form-group">
+                                <label>University</label>
+                                <select id="university">
+                                    <option value="">-- Select University --</option>
+                                    <option>Savitribai Phule Pune University (SPPU), Pune</option>
+                                    <option>Mumbai University (MU), Mumbai</option>
+                                    <option>Rashtrasant Tukadoji Maharaj Nagpur University (RTMNU), Nagpur</option>
+                                    <option>Dr. Babasaheb Ambedkar Marathwada University (BAMU), Chhatrapati Sambhajinagar</option>
+                                    <option>Shivaji University, Kolhapur (SUK)</option>
+                                    <option>Sant Gadge Baba Amravati University (SGBAU), Amravati</option>
+                                    <option>Kavayitri Bahinabai Chaudhari North Maharashtra University (KBCNMU), Jalgaon</option>
+                                    <option>Swami Ramanand Teerth Marathwada University (SRTMU), Nanded</option>
+                                    <option>Punyashlok Ahilyadevi Holkar Solapur University, Solapur</option>
+                                    <option>Gondwana University, Gadchiroli</option>
+                                    <option>Dr. Babasaheb Ambedkar Technological University (DBATU), Lonere</option>
+                                    <option>Institute of Chemical Technology (ICT), Mumbai</option>
+                                    <option>COEP Technological University (COEP Tech), Pune</option>
+                                    <option>MIT World Peace University (MIT-WPU), Pune</option>
+                                    <option>Symbiosis International University (SIT), Pune</option>
+                                    <option>Vishwakarma University (VU), Pune</option>
+                                    <option>Dr. D. Y. Patil Vidyapeeth / University (Pune & Navi Mumbai)</option>
+                                    <option>Bharati Vidyapeeth Deemed University, Pune</option>
+                                    <option>Ramdeobaba University (RBU), Nagpur</option>
+                                    <option>GH Raisoni University (Nagpur / Amravati)</option>
+                                    <option>Sanjay Ghodawat University (SGU), Kolhapur</option>
+                                    <option>Sandip University, Nashik</option>
+                                    <option>Ajeenkya DY Patil University, Pune</option>
+                                    <option>MGM University, Chhatrapati Sambhajinagar</option>
+                                    <option>Somaiya Vidyavihar University (K J Somaiya), Mumbai</option>
+                                    <option>Indian Institute of Technology (IIT) Bombay</option>
+                                    <option>Visvesvaraya National Institute of Technology (VNIT), Nagpur</option>
+                                    <option>Indian Institute of Information Technology (IIIT), Pune</option>
+                                    <option>Indian Institute of Information Technology (IIIT), Nagpur</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <input type="text" id="universityOther" placeholder="Enter university name" style="display:none; margin-top:8px;">
+                            </div>
+                            <div class="form-group">
+                                <label>District</label>
+                                <select id="district">
+                                    <option value="">-- Select City --</option>
+                                    <option>Ahmednagar (Ahilya Nagar)</option>
+                                    <option>Akola</option>
+                                    <option>Amravati</option>
+                                    <option>Beed</option>
+                                    <option>Bhandara</option>
+                                    <option>Buldhana</option>
+                                    <option>Chandrapur</option>
+                                    <option>Chhatrapati Sambhajinagar (Aurangabad)</option>
+                                    <option>Dharashiv (Osmanabad)</option>
+                                    <option>Dhule</option>
+                                    <option>Gadchiroli</option>
+                                    <option>Gondia</option>
+                                    <option>Hingoli</option>
+                                    <option>Jalgaon</option>
+                                    <option>Jalna</option>
+                                    <option>Kolhapur</option>
+                                    <option>Latur</option>
+                                    <option>Mumbai</option>
+                                    <option>Nagpur</option>
+                                    <option>Nanded</option>
+                                    <option>Nandurbar</option>
+                                    <option>Nashik</option>
+                                    <option>Navi Mumbai</option>
+                                    <option>Palghar</option>
+                                    <option>Parbhani</option>
+                                    <option>Pune</option>
+                                    <option>Raigad (Lonere / Karjat)</option>
+                                    <option>Ratnagiri</option>
+                                    <option>Sangli</option>
+                                    <option>Satara</option>
+                                    <option>Sindhudurg</option>
+                                    <option>Solapur</option>
+                                    <option>Thane (Kalyan / Dombivli)</option>
+                                    <option>Wardha</option>
+                                    <option>Washim</option>
+                                    <option>Yavatmal</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <input type="text" id="districtOther" placeholder="Enter city / district" style="display:none; margin-top:8px;">
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select id="collegeStatus">
+                                    <option value="">Select</option>
+                                    <option>Government</option>
+                                    <option>Govt. Aided</option>
+                                    <option>Private Unaided</option>
+                                    <option>University Managed</option>
+                                    <option>University Department</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Autonomy Status</label>
+                                <select id="autonomyStatus">
+                                    <option value="">Select</option>
+                                    <option>Autonomous</option>
+                                    <option>Non-Autonomous</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Landmark</label>
+                                <input type="text" id="landmark" placeholder="e.g. Near Kathora Naka">
+                            </div>
+                            <div class="form-group">
+                                <label>Website (Optional)</label>
+                                <input type="text" id="website" placeholder="e.g. https://gcoea.ac.in">
+                            </div>
+                            <div class="form-group">
+                                <label>NAAC Grade (Optional)</label>
+                                <input type="text" id="naacGrade" placeholder="e.g. A++">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step2" class="wizard-step">
+                        <h3>Step 2 – Choice Code, Branch & Financial Information</h3>
+                        <div class="form-grid" style="margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label>General Choice Code</label>
+                                <input type="text" id="choiceCode" maxlength="10" inputmode="numeric" pattern="\d{10}" placeholder="Enter 10 Digit Code">
+                            </div>
+                            <div class="form-group">
+                                <label>TFWS Choice Code</label>
+                                <input type="text" id="tfwsCode" maxlength="11" pattern="\d{10}T" placeholder="1234567890T">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Branch Name</label>
+                            <select id="branch">
+                                <option value="">-- Select Branch --</option>
+                                <option>Computer Science & Engineering (CSE)</option>
+                                <option>Computer Engineering</option>
+                                <option>Information Technology (IT)</option>
+                                <option>Artificial Intelligence & Machine Learning (AI-ML)</option>
+                                <option>Artificial Intelligence & Data Science (AI-DS)</option>
+                                <option>Cyber Security / Information Security</option>
+                                <option>Data Science & Analytics</option>
+                                <option>Cloud Computing & IoT</option>
+                                <option>Software Engineering</option>
+                                <option>Mechanical Engineering</option>
+                                <option>Civil Engineering</option>
+                                <option>Electrical Engineering</option>
+                                <option>Electronics Engineering</option>
+                                <option>Electronics & Telecommunication Engineering (E&TC)</option>
+                                <option>Electronics & Communication Engineering (ECE)</option>
+                                <option>Robotics & Artificial Intelligence</option>
+                                <option>Mechatronics Engineering</option>
+                                <option>Instrumentation & Control Engineering</option>
+                                <option>Automation & Robotics</option>
+                                <option>Electric Vehicle (EV) Technology</option>
+                                <option>Chemical Engineering</option>
+                                <option>Petrochemical Engineering</option>
+                                <option>Metallurgical & Materials Engineering</option>
+                                <option>Polymer / Surface Coating Technology</option>
+                                <option>Food Engineering & Technology</option>
+                                <option>Aeronautical / Aerospace Engineering</option>
+                                <option>Automobile Engineering</option>
+                                <option>Biotechnology / Bioengineering</option>
+                                <option>Biomedical Engineering</option>
+                                <option>Production & Industrial Engineering</option>
+                                <option>Textile Technology / Textile Engineering</option>
+                                <option>Agricultural Engineering</option>
+                                <option>Environmental Engineering</option>
+                                <option>Mining Engineering</option>
+                                <option>Marine Engineering</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="text" id="branchOther" placeholder="Enter branch name" style="display:none; margin-top:8px;">
+                        </div>
+                        <h4 style="margin-top:15px; color: var(--navy);">1. Fees Structure Matrix</h4>
+                        <div class="input-table-wrapper">
+                            <table class="input-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category Fee Structure</th>
+                                        <th>Amount (Annual INR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Open Category Fees</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openFees" placeholder="e.g. 120000">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC Category Fees</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcFees" placeholder="e.g. 65000">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>PWD-OBC Category Fees</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="pwdFees" placeholder="e.g. 15000">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h4 style="color: var(--navy);">2. Category Seat Allocation Matrix</h4>
+                        <div class="input-table-wrapper">
+                            <table class="input-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category / Quota Type</th>
+                                        <th>General Intake Seats</th>
+                                        <th>Ladies Quota Seats</th>
+                                        <th>PWD Quota Seats</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Open Quota</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openGeneral" placeholder="General">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openLadies" placeholder="Ladies">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openPwd" placeholder="PWD">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC Quota</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcGeneral" placeholder="General">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcLadies" placeholder="Ladies">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcPwd" placeholder="PWD">
+                                        </td>
+                                    </tr>
+                                    <tr style="background: #f8fafc;">
+                                        <td>
+                                            <strong>Gross Seat Allotment</strong>
+                                        </td>
+                                        <td colspan="3">
+                                            <input type="number" id="totalIntake" placeholder="Enter Total Branch Intake Seats">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="step3" class="wizard-step">
+                        <h3>Step 3 – Previous Year Cutoff Matrix</h3>
+                        <div class="input-table-wrapper">
+                            <table class="input-table">
+                                <thead>
+                                    <tr>
+                                        <th>Allocation Category</th>
+                                        <th>Cutoff General Merit Rank</th>
+                                        <th>Cutoff MHT-CET Percentile (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Open General</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="openPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Open PWD</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="openPwdRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="openPwdPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC General</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="obcPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>OBC PWD</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="obcPwdRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="obcPwdPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>TFWS Scheme</strong>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="tfwsRank" placeholder="Rank">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" id="tfwsPercentile" placeholder="Percentile">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="saveOptionBtn" class="save-option-btn"> Save Preference Option </button>
+                    </div>
+                    <div class="wizard-actions">
+                        <button type="button" id="prevBtn" class="wizard-btn secondary-btn" style="display:none;"> Previous Step </button>
+                        <button type="button" id="nextBtn" class="wizard-btn primary-btn"> Next Step </button>
+                    </div>
+                </div>
+            </section>
+            <section id="summary" class="page">
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <h2>Option Form Final Summary Table</h2>
+                        <div class="summary-buttons">
+                            <button class="summary-btn" id="exportFullPdfBtn" style="background:#10b981;">📄 Download Option Form PDF</button>
+                            <button class="summary-btn" id="exportCsvBtn">📥 Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="filter-bar" style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <input type="text" id="searchFilter" placeholder="🔍 Search College / Branch..." style="flex: 1; min-width: 200px;">
+                        <select id="districtFilter" style="width: 180px;">
+                            <option value="">All Districts</option>
+                        </select>
+                        <select id="statusFilter" style="width: 180px;">
+                            <option value="">All Statuses</option>
+                            <option>Government</option>
+                            <option>Govt. Aided</option>
+                            <option>Private Unaided</option>
+                            <option>University Managed</option>
+                            <option>University Department</option>
+                        </select>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="summary-table">
+                            <thead>
+                                <tr>
+                                    <th>Pref.</th>
+                                    <th>Choice Code</th>
+                                    <th>TFWS Code</th>
+                                    <th>College Name</th>
+                                    <th>Branch Name</th>
+                                    <th>City</th>
+                                    <th>Status</th>
+                                    <th>Map / Web</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+        </div>
+
+        <!-- ===================== DETAIL MODAL ===================== -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>College Detail Specification Report</h2>
+                    <button class="modal-close" id="modalCloseBtn">✕</button>
+                </div>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+
+        <!-- ===================== EDIT PROFILE MODAL ===================== -->
+        <div id="editProfileOverlay" class="ep-overlay" role="dialog" aria-modal="true" aria-labelledby="epTitle">
+            <div class="ep-modal">
+                <div class="ep-head">
+                    <div>
+                        <h2 id="epTitle">Edit Profile</h2>
+                        <p>Update your personal details & avatar</p>
+                    </div>
+                    <button id="epCloseBtn" class="ep-close" type="button" aria-label="Close">✕</button>
+                </div>
+
+                <div class="ep-pic">
+                    <img id="epPicPreview" class="ep-pic-preview" src="" alt="Profile preview">
+                    <div>
+                        <button id="epPicChangeBtn" class="ep-pic-btn" type="button">Change Avatar</button>
+                        <input type="file" id="epFileInput" accept="image/png,image/jpeg,image/webp" style="display:none;">
+                        <div class="ep-pic-hint">JPG, PNG or WEBP (Max 2MB)</div>
+                    </div>
+                </div>
+
+                <form id="editProfileForm">
+                    <div class="ep-field">
+                        <label for="epName">Candidate Name</label>
+                        <input type="text" id="epName" required placeholder="Full Name">
+                    </div>
+
+                    <div class="ep-grid">
+                        <div class="ep-field">
+                            <label for="epAppId">Application ID</label>
+                            <input type="text" id="epAppId" required placeholder="e.g. EN26109988">
+                        </div>
+                        <div class="ep-field">
+                            <label for="epRank">State Merit Rank</label>
+                            <input type="number" id="epRank" required placeholder="e.g. 4215">
+                        </div>
+                    </div>
+
+                    <div class="ep-field">
+                        <label for="epCategory">Category</label>
+                        <select id="epCategory" required>
+                            <option value="">-- Select Category --</option>
+                            <option>Open/General</option>
+                            <option>SC</option>
+                            <option>ST</option>
+                            <option>VJ/NT</option>
+                            <option>NT1</option>
+                            <option>NT2</option>
+                            <option>NT3</option>
+                            <option>OBC</option>
+                            <option>SEBC</option>
+                            <option>EWS</option>
+                            <option>PWD</option>
+                        </select>
+                    </div>
+
+                    <div class="ep-actions">
+                        <button type="button" id="epCancelBtn" class="ep-btn cancel">Cancel</button>
+                        <button type="submit" id="epSaveBtn" class="ep-btn save">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===================== THEME TOGGLER ===================== -->
+        <button class="theme-fab" id="themeFab" title="Choose Color Theme">🎨</button>
+        <button class="mode-fab" id="modeFab" title="Toggle Light / Dark Mode">🌙</button>
+
+        <div class="theme-panel" id="themePanel">
+            <h4>Choose Accent Theme</h4>
+            <div class="theme-swatches">
+                <div class="theme-swatch active" data-theme="default" title="Slate Gold"></div>
+                <div class="theme-swatch" data-theme="royal" title="Royal Purple"></div>
+                <div class="theme-swatch" data-theme="sunset" title="Sunset Orange"></div>
+                <div class="theme-swatch" data-theme="ocean" title="Ocean Cyan"></div>
+                <div class="theme-swatch" data-theme="emerald" title="Emerald Green"></div>
+                <div class="theme-swatch" data-theme="rose" title="Rose Red"></div>
+                <div class="theme-swatch" data-theme="midnight" title="Midnight Sky"></div>
+                <div class="theme-swatch" data-theme="forest" title="Forest Green"></div>
+                <div class="theme-swatch" data-theme="graphite" title="Graphite Warm"></div>
+            </div>
+        </div>
+
+        <div id="prefToast">Preference updated!</div>
+
+        <!-- APP ENGINE SCRIPT -->
+        <script>
+            // ---------- App State & Persistence ----------
+            let userProfile = JSON.parse(localStorage.getItem("mahacap_profile")) || {
+                name: "Swapnil S.",
+                appId: "EN26109988",
+                rank: "4215",
+                category: "OBC"
+            };
+
+            let optionsList = JSON.parse(localStorage.getItem("mahacap_options")) || [];
+            let editingOptionIndex = null;
+            let currentStep = 1;
+            let currentAuthMode = 'login'; // 'login' | 'signup'
+
+            // ---------- DOM Load ----------
+            document.addEventListener("DOMContentLoaded", function () {
+                initAuth();
+                initApp();
+                initThemeAndMode();
+                initEditProfile();
+                initDragAndJump();
+            });
+
+            // ---------- Authentication Engine ----------
+            function initAuth() {
+                // Check if user is logged in
+                const authState = localStorage.getItem("mahacap_auth");
+                if (authState === "true") {
+                    showAppShell();
+                } else if (localStorage.getItem("mahacap_has_seen_landing") !== "true") {
+                    showScreen("landingScreen");
+                } else {
+                    showScreen("loginScreen");
+                }
+
+                // Landing page actions
+                document.getElementById("landingLoginBtn")?.addEventListener("click", () => {
+                    localStorage.setItem("mahacap_has_seen_landing", "true");
+                    showScreen("loginScreen");
+                });
+                document.getElementById("landingGetStartedBtn")?.addEventListener("click", () => {
+                    localStorage.setItem("mahacap_has_seen_landing", "true");
+                    showScreen("loginScreen");
+                });
+                document.getElementById("heroGetStartedBtn")?.addEventListener("click", () => {
+                    localStorage.setItem("mahacap_has_seen_landing", "true");
+                    showScreen("loginScreen");
+                });
+                document.getElementById("landingContactForm")?.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    alert("Thank you for reaching out! We will reply to your email shortly.");
+                    e.target.reset();
+                });
+
+                // Landing FAQ toggles
+                document.querySelectorAll(".faq-question").forEach(q => {
+                    q.addEventListener("click", () => {
+                        const item = q.closest(".faq-item");
+                        const isOpen = item.classList.contains("open");
+                        document.querySelectorAll(".faq-item").forEach(i => i.classList.remove("open"));
+                        if (!isOpen) item.classList.add("open");
+                    });
+                });
+
+                // Google Sign In (Simulated)
+                document.getElementById("googleSignInBtn")?.addEventListener("click", () => {
+                    simulateGoogleLogin();
+                });
+
+                // Auth form toggle (Sign In / Sign Up)
+                document.getElementById("authToggleLink")?.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    currentAuthMode = currentAuthMode === 'login' ? 'signup' : 'login';
+                    const label = document.getElementById("authToggleLabel");
+                    const link = document.getElementById("authToggleLink");
+                    const submitBtn = document.getElementById("emailAuthSubmitBtn");
+                    const subText = document.getElementById("authSubText");
+
+                    if (currentAuthMode === 'signup') {
+                        label.textContent = "Already have an account?";
+                        link.textContent = "Sign in";
+                        submitBtn.textContent = "Create Account";
+                        subText.textContent = "Sign up to start filling your MHT-CET CAP option form.";
+                    } else {
+                        label.textContent = "Don't have an account?";
+                        link.textContent = "Create one";
+                        submitBtn.textContent = "Sign In";
+                        subText.textContent = "Sign in to start filling your MHT-CET CAP option form.";
+                    }
+                    document.getElementById("authError").textContent = "";
+                });
+
+                // Forgot Password
+                document.getElementById("forgotPasswordLink")?.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById("authEmail").value.trim();
+                    if (!email) {
+                        document.getElementById("authError").textContent = "Please enter your email address first.";
+                        return;
+                    }
+                    alert("A password reset link has been sent to " + email + " (Simulated).");
+                });
+
+                // Email Auth Submit
+                document.getElementById("emailAuthForm")?.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById("authEmail").value.trim();
+                    const pass = document.getElementById("authPassword").value.trim();
+                    const errorEl = document.getElementById("authError");
+
+                    if (!email || !pass) {
+                        errorEl.textContent = "Please fill in all fields.";
+                        return;
+                    }
+                    if (pass.length < 6) {
+                        errorEl.textContent = "Password must be at least 6 characters.";
+                        return;
+                    }
+
+                    errorEl.textContent = "";
+
+                    // If profile doesn't exist, route through onboarding
+                    const hasProfile = localStorage.getItem("mahacap_profile_completed");
+                    userProfile.email = email;
+
+                    if (currentAuthMode === 'signup' || !hasProfile) {
+                        showScreen("onboardingScreen");
+                    } else {
+                        loginSuccess();
+                    }
+                });
+
+                // Onboarding Form Submit
+                document.getElementById("onboardingForm")?.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    userProfile.name = document.getElementById("ob_name").value.trim();
+                    userProfile.appId = document.getElementById("ob_appId").value.trim();
+                    userProfile.rank = document.getElementById("ob_rank").value.trim();
+                    userProfile.category = document.getElementById("ob_category").value;
+
+                    localStorage.setItem("mahacap_profile", JSON.stringify(userProfile));
+                    localStorage.setItem("mahacap_profile_completed", "true");
+
+                    loginSuccess();
+                });
+
+                // Logout
+                document.getElementById("logoutBtn")?.addEventListener("click", () => {
+                    localStorage.removeItem("mahacap_auth");
+                    showScreen("loginScreen");
+                });
+            }
+
+            function simulateGoogleLogin() {
+                // Populate default mock Google user
+                userProfile.name = userProfile.name || "Swapnil S.";
+                userProfile.email = "swapnil@example.com";
+                userProfile.photoURL = "https://lh3.googleusercontent.com/a/default-user";
+
+                const hasProfile = localStorage.getItem("mahacap_profile_completed");
+                if (!hasProfile) {
+                    document.getElementById("ob_name").value = userProfile.name;
+                    showScreen("onboardingScreen");
+                } else {
+                    loginSuccess();
+                }
+            }
+
+            function loginSuccess() {
+                localStorage.setItem("mahacap_auth", "true");
+                localStorage.setItem("mahacap_profile", JSON.stringify(userProfile));
+                showAppShell();
+            }
+
+            function showScreen(screenId) {
+                ["landingScreen", "loginScreen", "onboardingScreen", "appShell"].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = (id === screenId) ? "block" : "none";
+                });
+            }
+
+            function showAppShell() {
+                showScreen("appShell");
+                renderProfile();
+                renderSummaryTable();
+                updateStats();
+                populateDistrictFilter();
+                updateCloneDropdown();
+            }
+
+            // ---------- Edit Profile Feature ----------
+            function initEditProfile() {
+                const overlay = document.getElementById("editProfileOverlay");
+                const avatarBtn = document.getElementById("avatarBtn");
+                const userMenu = document.getElementById("userMenu");
+                const editMenuBtn = document.getElementById("editProfileMenuBtn");
+                const closeBtn = document.getElementById("epCloseBtn");
+                const cancelBtn = document.getElementById("epCancelBtn");
+                const form = document.getElementById("editProfileForm");
+                const fileInput = document.getElementById("epFileInput");
+                const picChangeBtn = document.getElementById("epPicChangeBtn");
+                const picPreview = document.getElementById("epPicPreview");
+
+                // Toggle dropdown menu
+                avatarBtn?.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    userMenu.classList.toggle("open");
+                    avatarBtn.setAttribute("aria-expanded", userMenu.classList.contains("open"));
+                });
+
+                document.addEventListener("click", (e) => {
+                    if (!userMenu?.contains(e.target) && !avatarBtn?.contains(e.target)) {
+                        userMenu?.classList.remove("open");
+                        avatarBtn?.setAttribute("aria-expanded", "false");
+                    }
+                });
+
+                // Open modal
+                editMenuBtn?.addEventListener("click", () => {
+                    userMenu.classList.remove("open");
+                    openEditProfileModal();
+                });
+
+                function openEditProfileModal() {
+                    document.getElementById("epName").value = userProfile.name || "";
+                    document.getElementById("epAppId").value = userProfile.appId || "";
+                    document.getElementById("epRank").value = userProfile.rank || "";
+                    document.getElementById("epCategory").value = userProfile.category || "";
+                    picPreview.src = userProfile.photoURL || buildInitialsAvatar(userProfile.name || "C");
+                    overlay.classList.add("open");
+                }
+
+                function closeEditProfileModal() {
+                    overlay.classList.remove("open");
+                }
+
+                closeBtn?.addEventListener("click", closeEditProfileModal);
+                cancelBtn?.addEventListener("click", closeEditProfileModal);
+                overlay?.addEventListener("click", (e) => {
+                    if (e.target === overlay) closeEditProfileModal();
+                });
+
+                // Change picture
+                picChangeBtn?.addEventListener("click", () => fileInput.click());
+                fileInput?.addEventListener("change", (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert("Please select an image smaller than 2MB.");
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        picPreview.src = evt.target.result;
+                        userProfile._pendingPhoto = evt.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                // Save
+                form?.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    userProfile.name = document.getElementById("epName").value.trim();
+                    userProfile.appId = document.getElementById("epAppId").value.trim();
+                    userProfile.rank = document.getElementById("epRank").value.trim();
+                    userProfile.category = document.getElementById("epCategory").value;
+
+                    if (userProfile._pendingPhoto) {
+                        userProfile.photoURL = userProfile._pendingPhoto;
+                        delete userProfile._pendingPhoto;
+                    }
+
+                    localStorage.setItem("mahacap_profile", JSON.stringify(userProfile));
+                    renderProfile();
+                    closeEditProfileModal();
+                });
+            }
+
+            function buildInitialsAvatar(name) {
+                const initials = (name || "C").split(" ").map(p => p[0]).join("").substring(0, 2).toUpperCase();
+                const canvas = document.createElement("canvas");
+                canvas.width = 120; canvas.height = 120;
+                const ctx = canvas.getContext("2d");
+                const grad = ctx.createLinearGradient(0, 0, 120, 120);
+                grad.addColorStop(0, "#312e81");
+                grad.addColorStop(1, "#f59e0b");
+                ctx.fillStyle = grad; ctx.fillRect(0, 0, 120, 120);
+                ctx.fillStyle = "#ffffff"; ctx.font = "bold 48px sans-serif";
+                ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                ctx.fillText(initials, 60, 64);
+                return canvas.toDataURL();
+            }
+
+            function renderProfile() {
+                document.getElementById("candidateName").textContent = userProfile.name || "--";
+                document.getElementById("candidateAppId").textContent = userProfile.appId || "--";
+                document.getElementById("candidateRank").textContent = userProfile.rank || "--";
+                document.getElementById("candidateCategory").textContent = userProfile.category || "--";
+
+                document.getElementById("userNameLabel").textContent = userProfile.name || "Candidate";
+                document.getElementById("menuUserName").textContent = userProfile.name || "Candidate";
+                document.getElementById("menuUserEmail").textContent = userProfile.email || userProfile.appId || "";
+
+                const userAvatar = document.getElementById("userAvatar");
+                const userInitials = document.getElementById("userInitials");
+                const menuAvatar = document.getElementById("menuAvatar");
+                const menuInitials = document.getElementById("menuInitials");
+
+                if (userProfile.photoURL) {
+                    userAvatar.src = userProfile.photoURL; userAvatar.style.display = "block";
+                    userInitials.style.display = "none";
+                    menuAvatar.src = userProfile.photoURL; menuAvatar.style.display = "block";
+                    menuInitials.style.display = "none";
+                } else {
+                    const initials = (userProfile.name || "C").split(" ").map(p => p[0]).join("").substring(0, 2).toUpperCase();
+                    userAvatar.style.display = "none"; userInitials.textContent = initials; userInitials.style.display = "flex";
+                    menuAvatar.style.display = "none"; menuInitials.textContent = initials; menuInitials.style.display = "flex";
+                }
+            }
+
+            // ---------- Core Application Engine ----------
+            function initApp() {
+                // Navigation Tab Switching
+                document.querySelectorAll(".tab-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                        document.querySelectorAll(".page").forEach(p => p.classList.remove("active-page"));
+                        btn.classList.add("active");
+                        const tabId = btn.getAttribute("data-tab");
+                        document.getElementById(tabId).classList.add("active-page");
+                    });
+                });
+
+                // Wizard Steps
+                document.getElementById("nextBtn").addEventListener("click", () => {
+                    if (validateStep(currentStep)) {
+                        currentStep++;
+                        showStep(currentStep);
+                    }
+                });
+                document.getElementById("prevBtn").addEventListener("click", () => {
+                    currentStep--;
+                    showStep(currentStep);
+                });
+
+                // "Other" dropdown handler toggles
+                bindOtherToggle("university", "universityOther");
+                bindOtherToggle("district", "districtOther");
+                bindOtherToggle("branch", "branchOther");
+
+                // Autofill / Clone handler
+                document.getElementById("cloneCollegeSelect").addEventListener("change", function () {
+                    const idx = this.value;
+                    if (idx === "") return;
+                    const opt = optionsList[idx];
+                    if (opt) {
+                        document.getElementById("instituteCode").value = opt.instituteCode || "";
+                        document.getElementById("collegeName").value = opt.collegeName || "";
+                        document.getElementById("instituteAddress").value = opt.instituteAddress || "";
+                        setSelectOrOther("university", "universityOther", opt.university);
+                        setSelectOrOther("district", "districtOther", opt.district);
+                        document.getElementById("collegeStatus").value = opt.collegeStatus || "";
+                        document.getElementById("autonomyStatus").value = opt.autonomyStatus || "";
+                        document.getElementById("landmark").value = opt.landmark || "";
+                        document.getElementById("website").value = opt.website || "";
+                        document.getElementById("naacGrade").value = opt.naacGrade || "";
+                    }
+                });
+
+                // Save Preference Form
+                document.getElementById("saveOptionBtn").addEventListener("click", saveOptionForm);
+
+                // Filters
+                document.getElementById("searchFilter").addEventListener("input", renderSummaryTable);
+                document.getElementById("districtFilter").addEventListener("change", renderSummaryTable);
+                document.getElementById("statusFilter").addEventListener("change", renderSummaryTable);
+
+                // Modal Close
+                document.getElementById("modalCloseBtn").addEventListener("click", closeModal);
+                window.addEventListener("click", (e) => {
+                    if (e.target === document.getElementById("detailModal")) closeModal();
+                });
+
+                // Exports
+                document.getElementById("exportCsvBtn").addEventListener("click", exportCSV);
+                document.getElementById("exportFullPdfBtn").addEventListener("click", exportFullPDF);
+            }
+
+            function bindOtherToggle(selectId, inputId) {
+                document.getElementById(selectId).addEventListener("change", function () {
+                    const input = document.getElementById(inputId);
+                    if (this.value === "Other") {
+                        input.style.display = "block";
+                        input.required = true;
+                    } else {
+                        input.style.display = "none";
+                        input.required = false;
+                        input.value = "";
+                    }
+                });
+            }
+
+            function setSelectOrOther(selectId, inputId, value) {
+                const select = document.getElementById(selectId);
+                const input = document.getElementById(inputId);
+                const options = Array.from(select.options).map(o => o.value);
+                if (options.includes(value)) {
+                    select.value = value;
+                    input.style.display = "none";
+                } else {
+                    select.value = "Other";
+                    input.style.display = "block";
+                    input.value = value || "";
+                }
+            }
+
+            function getSelectOrOther(selectId, inputId) {
+                const select = document.getElementById(selectId);
+                if (select.value === "Other") {
+                    return document.getElementById(inputId).value.trim();
+                }
+                return select.value;
+            }
+
+            function showStep(step) {
+                document.querySelectorAll(".wizard-step").forEach(s => s.classList.remove("active-step"));
+                document.getElementById(`step${step}`).classList.add("active-step");
+
+                document.querySelectorAll(".step-dot").forEach((dot, idx) => {
+                    if (idx + 1 <= step) dot.classList.add("active");
+                    else dot.classList.remove("active");
+                });
+
+                document.getElementById("progressFill").style.width = `${(step / 3) * 100}%`;
+
+                document.getElementById("prevBtn").style.display = step === 1 ? "none" : "block";
+                document.getElementById("nextBtn").style.display = step === 3 ? "none" : "block";
+            }
+
+            function validateStep(step) {
+                if (step === 1) {
+                    const code = document.getElementById("instituteCode").value.trim();
+                    const name = document.getElementById("collegeName").value.trim();
+                    if (!code || !name) {
+                        alert("Please provide the Institute Code and College Name.");
+                        return false;
+                    }
+                } else if (step === 2) {
+                    const cc = document.getElementById("choiceCode").value.trim();
+                    const branch = getSelectOrOther("branch", "branchOther");
+                    if (!cc || !branch) {
+                        alert("Please enter a Choice Code and select a Branch.");
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function saveOptionForm() {
+                const optionData = {
+                    instituteCode: document.getElementById("instituteCode").value.trim(),
+                    collegeName: document.getElementById("collegeName").value.trim(),
+                    instituteAddress: document.getElementById("instituteAddress").value.trim(),
+                    university: getSelectOrOther("university", "universityOther"),
+                    district: getSelectOrOther("district", "districtOther"),
+                    collegeStatus: document.getElementById("collegeStatus").value,
+                    autonomyStatus: document.getElementById("autonomyStatus").value,
+                    landmark: document.getElementById("landmark").value.trim(),
+                    website: document.getElementById("website").value.trim(),
+                    naacGrade: document.getElementById("naacGrade").value.trim(),
+
+                    choiceCode: document.getElementById("choiceCode").value.trim(),
+                    tfwsCode: document.getElementById("tfwsCode").value.trim(),
+                    branch: getSelectOrOther("branch", "branchOther"),
+
+                    fees: {
+                        open: document.getElementById("openFees").value,
+                        obc: document.getElementById("obcFees").value,
+                        pwd: document.getElementById("pwdFees").value
+                    },
+                    seats: {
+                        openGen: document.getElementById("openGeneral").value,
+                        openLady: document.getElementById("openLadies").value,
+                        openPwd: document.getElementById("openPwd").value,
+                        obcGen: document.getElementById("obcGeneral").value,
+                        obcLady: document.getElementById("obcLadies").value,
+                        obcPwd: document.getElementById("obcPwd").value,
+                        totalIntake: document.getElementById("totalIntake").value
+                    },
+                    cutoffs: {
+                        openRank: document.getElementById("openRank").value,
+                        openPct: document.getElementById("openPercentile").value,
+                        openPwdRank: document.getElementById("openPwdRank").value,
+                        openPwdPct: document.getElementById("openPwdPercentile").value,
+                        obcRank: document.getElementById("obcRank").value,
+                        obcPct: document.getElementById("obcPercentile").value,
+                        obcPwdRank: document.getElementById("obcPwdRank").value,
+                        obcPwdPct: document.getElementById("obcPwdPercentile").value,
+                        tfwsRank: document.getElementById("tfwsRank").value,
+                        tfwsPct: document.getElementById("tfwsPercentile").value
+                    }
+                };
+
+                if (editingOptionIndex !== null) {
+                    optionsList[editingOptionIndex] = optionData;
+                    editingOptionIndex = null;
+                    alert("Preference updated successfully!");
+                } else {
+                    optionsList.push(optionData);
+                    alert("Preference added successfully!");
+                }
+
+                saveToLocalStorage();
+                resetForm();
+                currentStep = 1;
+                showStep(1);
+                renderSummaryTable();
+                updateStats();
+                populateDistrictFilter();
+                updateCloneDropdown();
+
+                // Switch to Summary Tab
+                document.querySelector('[data-tab="summary"]').click();
+            }
+
+            function resetForm() {
+                const inputs = document.querySelectorAll("#form input, #form select");
+                inputs.forEach(i => {
+                    i.value = "";
+                    if (i.tagName === "SELECT") i.selectedIndex = 0;
+                });
+                document.getElementById("universityOther").style.display = "none";
+                document.getElementById("districtOther").style.display = "none";
+                document.getElementById("branchOther").style.display = "none";
+            }
+
+            function saveToLocalStorage() {
+                localStorage.setItem("mahacap_options", JSON.stringify(optionsList));
+                localStorage.setItem("mahacap_last_modified", new Date().toLocaleString());
+            }
+
+            // ---------- Summary Table & Filtering ----------
+            function renderSummaryTable() {
+                const tbody = document.getElementById("summaryTableBody");
+                tbody.innerHTML = "";
+
+                const search = document.getElementById("searchFilter").value.toLowerCase();
+                const district = document.getElementById("districtFilter").value;
+                const status = document.getElementById("statusFilter").value;
+
+                const filtered = optionsList.filter(item => {
+                    const matchSearch = item.collegeName.toLowerCase().includes(search) ||
+                        item.branch.toLowerCase().includes(search) ||
+                        item.choiceCode.includes(search);
+                    const matchDistrict = !district || item.district === district;
+                    const matchStatus = !status || item.collegeStatus === status;
+                    return matchSearch && matchDistrict && matchStatus;
+                });
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--muted);">No preference options found. Fill out the option form to populate this table.</td></tr>`;
+                    return;
+                }
+
+                filtered.forEach((opt) => {
+                    const actualIdx = optionsList.indexOf(opt);
+                    const prefNo = actualIdx + 1;
+                    const tr = document.createElement("tr");
+                    tr.setAttribute("draggable", "true");
+                    tr.setAttribute("data-index", actualIdx);
+
+                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(opt.collegeName + ' ' + (opt.district || ''))}`;
+                    const webUrl = opt.website ? (opt.website.startsWith('http') ? opt.website : 'https://' + opt.website) : '';
+
+                    tr.innerHTML = `
+                        <td>
+                            <div class="pref-cell">
+                                <span class="drag-handle" title="Drag to reorder">⋮⋮</span>
+                                <input type="number" class="pref-input" value="${prefNo}" min="1" max="${optionsList.length}" data-old="${prefNo}" title="Type number to jump">
+                            </div>
+                        </td>
+                        <td><strong style="font-family:'JetBrains Mono',monospace;">${opt.choiceCode}</strong></td>
+                        <td><strong style="font-family:'JetBrains Mono',monospace;">${opt.tfwsCode || '--'}</strong></td>
+                        <td>
+                            <span class="college-link" onclick="openDetailModal(${actualIdx})">${opt.collegeName}</span>
+                            <br><small style="color:var(--muted);">${opt.university || ''}</small>
+                        </td>
+                        <td><strong>${opt.branch}</strong></td>
+                        <td>${opt.district || '--'}</td>
+                        <td><span class="modal-badge">${opt.collegeStatus || 'N/A'}</span></td>
+                        <td>
+                            <div class="link-actions">
+                                <a href="${mapUrl}" target="_blank" class="map-link">📍 Map</a>
+                                ${webUrl ? `<a href="${webUrl}" target="_blank" class="site-link">🌐 Website</a>` : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-grid">
+                                <button class="btn-view" onclick="openDetailModal(${actualIdx})" title="View Details">👁️</button>
+                                <button class="btn-edit" onclick="editOption(${actualIdx})" title="Edit">✏️</button>
+                                <button class="btn-up" onclick="moveOption(${actualIdx}, -1)" title="Move Up">▲</button>
+                                <button class="btn-down" onclick="moveOption(${actualIdx}, 1)" title="Move Down">▼</button>
+                                <button class="btn-pdf" onclick="exportSinglePDF(${actualIdx})" title="Export PDF">📄</button>
+                                <button class="btn-delete" onclick="deleteOption(${actualIdx})" title="Delete">🗑️</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            function moveOption(index, direction) {
+                const target = index + direction;
+                if (target < 0 || target >= optionsList.length) return;
+                const temp = optionsList[index];
+                optionsList[index] = optionsList[target];
+                optionsList[target] = temp;
+                saveToLocalStorage();
+                renderSummaryTable();
+                updateStats();
+            }
+
+            function jumpToPreference(fromIndex, toIndex) {
+                if (toIndex < 0 || toIndex >= optionsList.length || fromIndex === toIndex) return;
+                const [moved] = optionsList.splice(fromIndex, 1);
+                optionsList.splice(toIndex, 0, moved);
+                saveToLocalStorage();
+                renderSummaryTable();
+                updateStats();
+                showPrefToast(`Preference moved from #${fromIndex + 1} to #${toIndex + 1}`);
+            }
+
+            function showPrefToast(msg) {
+                const toast = document.getElementById("prefToast");
+                if (!toast) return;
+                toast.textContent = msg;
+                toast.classList.add("show");
+                clearTimeout(toast._timer);
+                toast._timer = setTimeout(() => toast.classList.remove("show"), 2200);
+            }
+
+            function initDragAndJump() {
+                const tbody = document.getElementById("summaryTableBody");
+                let draggedRow = null;
+                let dragSrcIndex = null;
+
+                tbody.addEventListener("dragstart", (e) => {
+                    const tr = e.target.closest("tr");
+                    if (!tr) return;
+                    draggedRow = tr;
+                    dragSrcIndex = parseInt(tr.getAttribute("data-index"), 10);
+                    tr.classList.add("dragging");
+                    e.dataTransfer.effectAllowed = "move";
+                    e.dataTransfer.setData("text/plain", dragSrcIndex);
+                });
+
+                tbody.addEventListener("dragend", (e) => {
+                    if (draggedRow) draggedRow.classList.remove("dragging");
+                    document.querySelectorAll("#summaryTableBody tr").forEach(r => {
+                        r.classList.remove("drag-over-top", "drag-over-bottom");
+                    });
+                    draggedRow = null;
+                    dragSrcIndex = null;
+                });
+
+                tbody.addEventListener("dragover", (e) => {
+                    e.preventDefault();
+                    const tr = e.target.closest("tr");
+                    if (!tr || tr === draggedRow) return;
+                    const rect = tr.getBoundingClientRect();
+                    const offset = e.clientY - rect.top;
+                    document.querySelectorAll("#summaryTableBody tr").forEach(r => {
+                        r.classList.remove("drag-over-top", "drag-over-bottom");
+                    });
+                    if (offset < rect.height / 2) {
+                        tr.classList.add("drag-over-top");
+                    } else {
+                        tr.classList.add("drag-over-bottom");
+                    }
+                });
+
+                tbody.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    const tr = e.target.closest("tr");
+                    if (!tr || dragSrcIndex === null) return;
+                    let targetIndex = parseInt(tr.getAttribute("data-index"), 10);
+                    const rect = tr.getBoundingClientRect();
+                    const offset = e.clientY - rect.top;
+                    if (offset >= rect.height / 2 && targetIndex < dragSrcIndex) {
+                        targetIndex++;
+                    } else if (offset < rect.height / 2 && targetIndex > dragSrcIndex) {
+                        targetIndex--;
+                    }
+                    jumpToPreference(dragSrcIndex, targetIndex);
+                });
+
+                // Number input jump handler
+                tbody.addEventListener("change", (e) => {
+                    if (e.target.classList.contains("pref-input")) {
+                        const input = e.target;
+                        const tr = input.closest("tr");
+                        const fromIdx = parseInt(tr.getAttribute("data-index"), 10);
+                        let val = parseInt(input.value, 10);
+                        if (isNaN(val) || val < 1) val = 1;
+                        if (val > optionsList.length) val = optionsList.length;
+                        const toIdx = val - 1;
+                        jumpToPreference(fromIdx, toIdx);
+                    }
+                });
+
+                tbody.addEventListener("keydown", (e) => {
+                    if (e.target.classList.contains("pref-input") && e.key === "Enter") {
+                        e.target.blur();
+                    }
+                });
+            }
+
+            function editOption(index) {
+                const opt = optionsList[index];
+                editingOptionIndex = index;
+
+                document.getElementById("instituteCode").value = opt.instituteCode || "";
+                document.getElementById("collegeName").value = opt.collegeName || "";
+                document.getElementById("instituteAddress").value = opt.instituteAddress || "";
+                setSelectOrOther("university", "universityOther", opt.university);
+                setSelectOrOther("district", "districtOther", opt.district);
+                document.getElementById("collegeStatus").value = opt.collegeStatus || "";
+                document.getElementById("autonomyStatus").value = opt.autonomyStatus || "";
+                document.getElementById("landmark").value = opt.landmark || "";
+                document.getElementById("website").value = opt.website || "";
+                document.getElementById("naacGrade").value = opt.naacGrade || "";
+
+                document.getElementById("choiceCode").value = opt.choiceCode || "";
+                document.getElementById("tfwsCode").value = opt.tfwsCode || "";
+                setSelectOrOther("branch", "branchOther", opt.branch);
+
+                if (opt.fees) {
+                    document.getElementById("openFees").value = opt.fees.open || "";
+                    document.getElementById("obcFees").value = opt.fees.obc || "";
+                    document.getElementById("pwdFees").value = opt.fees.pwd || "";
+                }
+
+                if (opt.seats) {
+                    document.getElementById("openGeneral").value = opt.seats.openGen || "";
+                    document.getElementById("openLadies").value = opt.seats.openLady || "";
+                    document.getElementById("openPwd").value = opt.seats.openPwd || "";
+                    document.getElementById("obcGeneral").value = opt.seats.obcGen || "";
+                    document.getElementById("obcLadies").value = opt.seats.obcLady || "";
+                    document.getElementById("obcPwd").value = opt.seats.obcPwd || "";
+                    document.getElementById("totalIntake").value = opt.seats.totalIntake || "";
+                }
+
+                if (opt.cutoffs) {
+                    document.getElementById("openRank").value = opt.cutoffs.openRank || "";
+                    document.getElementById("openPercentile").value = opt.cutoffs.openPct || "";
+                    document.getElementById("openPwdRank").value = opt.cutoffs.openPwdRank || "";
+                    document.getElementById("openPwdPercentile").value = opt.cutoffs.openPwdPct || "";
+                    document.getElementById("obcRank").value = opt.cutoffs.obcRank || "";
+                    document.getElementById("obcPercentile").value = opt.cutoffs.obcPct || "";
+                    document.getElementById("obcPwdRank").value = opt.cutoffs.obcPwdRank || "";
+                    document.getElementById("obcPwdPercentile").value = opt.cutoffs.obcPwdPct || "";
+                    document.getElementById("tfwsRank").value = opt.cutoffs.tfwsRank || "";
+                    document.getElementById("tfwsPercentile").value = opt.cutoffs.tfwsPct || "";
+                }
+
+                currentStep = 1;
+                showStep(1);
+                document.querySelector('[data-tab="form"]').click();
+            }
+
+            function deleteOption(index) {
+                if (confirm("Are you sure you want to delete this preference option?")) {
+                    optionsList.splice(index, 1);
+                    saveToLocalStorage();
+                    renderSummaryTable();
+                    updateStats();
+                    populateDistrictFilter();
+                    updateCloneDropdown();
+                }
+            }
+
+            // ---------- Stats & Dropdowns ----------
+            function updateStats() {
+                document.getElementById("totalPreferences").textContent = optionsList.length;
+                const uniqueBranches = new Set(optionsList.map(o => o.branch)).size;
+                document.getElementById("totalBranches").textContent = uniqueBranches;
+                document.getElementById("lastModified").textContent = localStorage.getItem("mahacap_last_modified") || "Just now";
+
+                // Completion status calculation: 10 preferences = 100%
+                const pct = Math.min(100, Math.round((optionsList.length / 10) * 100));
+                document.getElementById("completionStatus").textContent = `${pct}%`;
+            }
+
+            function populateDistrictFilter() {
+                const select = document.getElementById("districtFilter");
+                const currentVal = select.value;
+                const districts = Array.from(new Set(optionsList.map(o => o.district).filter(Boolean))).sort();
+                select.innerHTML = '<option value="">All Districts</option>';
+                districts.forEach(d => {
+                    const opt = document.createElement("option");
+                    opt.value = d; opt.textContent = d;
+                    select.appendChild(opt);
+                });
+                select.value = currentVal;
+            }
+
+            function updateCloneDropdown() {
+                const select = document.getElementById("cloneCollegeSelect");
+                if (!select) return;
+                select.innerHTML = '<option value="">-- Select a College to Autofill Institute Details --</option>';
+
+                // Unique colleges by code/name
+                const seen = new Set();
+                optionsList.forEach((opt, idx) => {
+                    const key = (opt.instituteCode || '') + '_' + opt.collegeName;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        const o = document.createElement("option");
+                        o.value = idx;
+                        o.textContent = `${opt.collegeName} (${opt.instituteCode || 'N/A'}) - ${opt.district || ''}`;
+                        select.appendChild(o);
+                    }
+                });
+            }
+
+            // ---------- Detail Modal ----------
+            function openDetailModal(index) {
+                const opt = optionsList[index];
+                if (!opt) return;
+
+                const body = document.getElementById("modalBody");
+                body.innerHTML = `
+                    <div class="modal-dashboard-grid">
+                        <div class="modal-card full-width">
+                            <h3>🏛️ Institute Details</h3>
+                            <table class="modal-table">
+                                <tr><th>Institute Code</th><td>${opt.instituteCode || '--'}</td></tr>
+                                <tr><th>College Name</th><td>${opt.collegeName}</td></tr>
+                                <tr><th>Address</th><td>${opt.instituteAddress || '--'}</td></tr>
+                                <tr><th>University</th><td>${opt.university || '--'}</td></tr>
+                                <tr><th>District / City</th><td>${opt.district || '--'}</td></tr>
+                                <tr><th>Status / Autonomy</th><td><span class="modal-badge">${opt.collegeStatus || 'N/A'}</span> <span class="modal-badge gold">${opt.autonomyStatus || 'N/A'}</span></td></tr>
+                                <tr><th>NAAC Grade</th><td>${opt.naacGrade || '--'}</td></tr>
+                                <tr><th>Website</th><td>${opt.website ? `<a href="${opt.website.startsWith('http') ? opt.website : 'https://' + opt.website}" target="_blank">${opt.website}</a>` : '--'}</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="modal-card">
+                            <h3>🎯 Choice Code & Branch</h3>
+                            <table class="modal-table">
+                                <tr><th>Branch</th><td>${opt.branch}</td></tr>
+                                <tr><th>General Choice Code</th><td><code>${opt.choiceCode}</code></td></tr>
+                                <tr><th>TFWS Choice Code</th><td><code>${opt.tfwsCode || '--'}</code></td></tr>
+                            </table>
+                        </div>
+
+                        <div class="modal-card">
+                            <h3>💰 Annual Fees Matrix</h3>
+                            <table class="modal-table">
+                                <tr><th>Open Fees</th><td>₹ ${opt.fees?.open || '--'}</td></tr>
+                                <tr><th>OBC Fees</th><td>₹ ${opt.fees?.obc || '--'}</td></tr>
+                                <tr><th>PWD-OBC Fees</th><td>₹ ${opt.fees?.pwd || '--'}</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="modal-card">
+                            <h3>👥 Intake Seat Matrix</h3>
+                            <table class="modal-table">
+                                <tr><th>Open (Gen / Lady / PWD)</th><td>${opt.seats?.openGen || '-'} / ${opt.seats?.openLady || '-'} / ${opt.seats?.openPwd || '-'}</td></tr>
+                                <tr><th>OBC (Gen / Lady / PWD)</th><td>${opt.seats?.obcGen || '-'} / ${opt.seats?.obcLady || '-'} / ${opt.seats?.obcPwd || '-'}</td></tr>
+                                <tr><th>Total Intake</th><td><strong>${opt.seats?.totalIntake || '--'} Seats</strong></td></tr>
+                            </table>
+                        </div>
+
+                        <div class="modal-card">
+                            <h3>📊 Previous Year Cutoffs</h3>
+                            <table class="modal-table">
+                                <tr><th>Open Gen</th><td>Rank: ${opt.cutoffs?.openRank || '--'} (${opt.cutoffs?.openPct || '--'} %)</td></tr>
+                                <tr><th>Open PWD</th><td>Rank: ${opt.cutoffs?.openPwdRank || '--'} (${opt.cutoffs?.openPwdPct || '--'} %)</td></tr>
+                                <tr><th>OBC Gen</th><td>Rank: ${opt.cutoffs?.obcRank || '--'} (${opt.cutoffs?.obcPct || '--'} %)</td></tr>
+                                <tr><th>OBC PWD</th><td>Rank: ${opt.cutoffs?.obcPwdRank || '--'} (${opt.cutoffs?.obcPwdPct || '--'} %)</td></tr>
+                                <tr><th>TFWS</th><td>Rank: ${opt.cutoffs?.tfwsRank || '--'} (${opt.cutoffs?.tfwsPct || '--'} %)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById("detailModal").style.display = "block";
+            }
+
+            function closeModal() {
+                document.getElementById("detailModal").style.display = "none";
+            }
+
+            // ---------- CSV & PDF Exports ----------
+            function exportCSV() {
+                if (optionsList.length === 0) {
+                    alert("No options available to export!");
+                    return;
+                }
+
+                let csv = "Preference No,Institute Code,College Name,University,District,Status,Branch,Choice Code,TFWS Code,Open Fees,OBC Fees,Total Intake\n";
+                optionsList.forEach((opt, idx) => {
+                    csv += `"${idx + 1}","${opt.instituteCode || ''}","${opt.collegeName || ''}","${opt.university || ''}","${opt.district || ''}","${opt.collegeStatus || ''}","${opt.branch || ''}","${opt.choiceCode || ''}","${opt.tfwsCode || ''}","${opt.fees?.open || ''}","${opt.fees?.obc || ''}","${opt.seats?.totalIntake || ''}"\n`;
+                });
+
+                const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `MahaCap_Options_${userProfile.appId || 'Draft'}.csv`;
+                a.click();
+            }
+
+            function exportSinglePDF(index) {
+                const opt = optionsList[index];
+                if (!opt) return;
+
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    alert("PDF Generation Library Error. Please refresh and try again.");
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+                // Header
+                doc.setFillColor(15, 23, 42);
+                doc.rect(0, 0, 210, 28, "F");
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(16);
+                doc.setFont("helvetica", "bold");
+                doc.text("MahaCap - College Preference Report", 14, 12);
+                doc.setFontSize(9);
+                doc.setFont("helvetica", "normal");
+                doc.text("MHT-CET CAP Practice Portal AY 2026-27", 14, 18);
+
+                // Candidate info
+                doc.setTextColor(15, 23, 42);
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "bold");
+                doc.text(`Candidate: ${userProfile.name} | App ID: ${userProfile.appId} | Rank: ${userProfile.rank} | Category: ${userProfile.category}`, 14, 36);
+
+                const tableData = [
+                    ["Preference Rank", `# ${index + 1}`],
+                    ["Institute Code", opt.instituteCode || "--"],
+                    ["College Name", opt.collegeName],
+                    ["Address", opt.instituteAddress || "--"],
+                    ["University", opt.university || "--"],
+                    ["District", opt.district || "--"],
+                    ["Status", `${opt.collegeStatus || ''} (${opt.autonomyStatus || ''})`],
+                    ["Branch Name", opt.branch],
+                    ["Choice Code", opt.choiceCode],
+                    ["TFWS Choice Code", opt.tfwsCode || "--"],
+                    ["Open Fees (Annual)", `INR ${opt.fees?.open || '--'}`],
+                    ["OBC Fees (Annual)", `INR ${opt.fees?.obc || '--'}`],
+                    ["Total Branch Intake", `${opt.seats?.totalIntake || '--'} Seats`],
+                    ["Open Cutoff Rank / %", `${opt.cutoffs?.openRank || '--'} Rank (${opt.cutoffs?.openPct || '--'}%)`],
+                    ["OBC Cutoff Rank / %", `${opt.cutoffs?.obcRank || '--'} Rank (${opt.cutoffs?.obcPct || '--'}%)`]
+                ];
+
+                doc.autoTable({
+                    startY: 42,
+                    head: [["Specification Field", "College Data Value"]],
+                    body: tableData,
+                    theme: "striped",
+                    headStyles: { fillColor: [245, 158, 11], textColor: [255, 255, 255], fontStyle: "bold" },
+                    styles: { fontSize: 9, cellPadding: 3 }
+                });
+
+                doc.setFontSize(8);
+                doc.setTextColor(100, 116, 139);
+                doc.text("Generated via MahaCap Portal. Unofficial practice draft.", 14, doc.lastAutoTable.finalY + 10);
+
+                doc.save(`Option_Pref_${index + 1}_${opt.choiceCode}.pdf`);
+            }
+
+            function exportFullPDF() {
+                if (optionsList.length === 0) {
+                    alert("No options added yet to export!");
+                    return;
+                }
+
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    alert("PDF Generation Library Error. Please refresh and try again.");
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+                const headers = [["Preference No.", "General Choice Code", "TFWS Choice Code", "College Name", "Branch Name"]];
+                const rows = optionsList.map((opt, idx) => [
+                    `${idx + 1}`,
+                    opt.choiceCode || "--",
+                    opt.tfwsCode || "--",
+                    opt.collegeName || "--",
+                    opt.branch || "--"
+                ]);
+
+                doc.autoTable({
+                    head: headers,
+                    body: rows,
+                    theme: "grid",
+                    margin: { top: 32, bottom: 20 },
+                    headStyles: {
+                        fillColor: [15, 23, 42],
+                        textColor: [255, 255, 255],
+                        fontStyle: "bold",
+                        halign: "center",
+                        valign: "middle"
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 32, halign: "center" },
+                        1: { cellWidth: 48, halign: "center" },
+                        2: { cellWidth: 48, halign: "center" },
+                        3: { cellWidth: "auto", halign: "left" },
+                        4: { cellWidth: 70, halign: "left" }
+                    },
+                    styles: {
+                        fontSize: 9,
+                        cellPadding: 4,
+                        overflow: "linebreak",
+                        valign: "middle"
+                    },
+                    didDrawPage: function (data) {
+                        // Header Title Section
+                        doc.setFillColor(15, 23, 42);
+                        doc.rect(0, 0, 297, 24, "F");
+
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(14);
+                        doc.setFont("helvetica", "bold");
+                        doc.text("MahaCap - Full Option Form Preference List", 14, 10);
+
+                        doc.setFontSize(8.5);
+                        doc.setFont("helvetica", "normal");
+                        doc.text(`Candidate: ${userProfile.name || '--'}  |  App ID: ${userProfile.appId || '--'}  |  Rank: ${userProfile.rank || '--'}  |  Category: ${userProfile.category || '--'}`, 14, 17);
+
+                        // Footer Page Numbers
+                        const pageCount = doc.internal.getNumberOfPages();
+                        doc.setFontSize(8);
+                        doc.setTextColor(100, 116, 139);
+                        doc.text(`Page ${data.pageNumber} of ${pageCount}`, 283, 202, { align: "right" });
+                        doc.text("Generated via MahaCap CAP Option Form Practice Portal. Unofficial Practice Draft.", 14, 202);
+                    }
+                });
+
+                doc.save(`MahaCap_Full_Option_Form_${userProfile.appId || 'Draft'}.pdf`);
+            }
+
+            // ---------- Theme & Mode Handler ----------
+            function initThemeAndMode() {
+                const fab = document.getElementById("themeFab");
+                const panel = document.getElementById("themePanel");
+                const modeFab = document.getElementById("modeFab");
+
+                fab?.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    panel.classList.toggle("open");
+                });
+
+                document.addEventListener("click", (e) => {
+                    if (!panel?.contains(e.target) && e.target !== fab) {
+                        panel?.classList.remove("open");
+                    }
+                });
+
+                document.querySelectorAll(".theme-swatch").forEach(swatch => {
+                    swatch.addEventListener("click", () => {
+                        const theme = swatch.getAttribute("data-theme");
+                        document.querySelectorAll(".theme-swatch").forEach(s => s.classList.remove("active"));
+                        swatch.classList.add("active");
+
+                        if (theme === "default") {
+                            document.documentElement.removeAttribute("data-theme");
+                            localStorage.removeItem("mahacap_theme");
+                        } else {
+                            document.documentElement.setAttribute("data-theme", theme);
+                            localStorage.setItem("mahacap_theme", theme);
+                        }
+                    });
+                });
+
+                // Load saved theme
+                const savedTheme = localStorage.getItem("mahacap_theme");
+                if (savedTheme) {
+                    document.documentElement.setAttribute("data-theme", savedTheme);
+                    const activeSwatch = document.querySelector(`.theme-swatch[data-theme="${savedTheme}"]`);
+                    if (activeSwatch) {
+                        document.querySelectorAll(".theme-swatch").forEach(s => s.classList.remove("active"));
+                        activeSwatch.classList.add("active");
+                    }
+                }
+
+                // Dark / Light Mode Toggle
+                modeFab?.addEventListener("click", () => {
+                    const currentMode = document.documentElement.getAttribute("data-mode");
+                    const newMode = currentMode === "dark" ? "light" : "dark";
+
+                    if (newMode === "dark") {
+                        document.documentElement.setAttribute("data-mode", "dark");
+                        modeFab.textContent = "☀️";
+                        localStorage.setItem("mahacap_mode", "dark");
+                    } else {
+                        document.documentElement.removeAttribute("data-mode");
+                        modeFab.textContent = "🌙";
+                        localStorage.setItem("mahacap_mode", "light");
+                    }
+                });
+
+                // Load saved mode
+                const savedMode = localStorage.getItem("mahacap_mode");
+                if (savedMode === "dark") {
+                    document.documentElement.setAttribute("data-mode", "dark");
+                    if (modeFab) modeFab.textContent = "☀️";
+                }
+            }
+        </script>
+    </body>
+</html>
